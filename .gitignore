@@ -1,0 +1,10 @@
+.env
+.env.local
+.env.*.local
+node_modules/
+npm-debug.log*
+frontend/build/
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
