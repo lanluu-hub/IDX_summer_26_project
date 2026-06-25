@@ -1,10 +1,10 @@
-require("dotenv").config();
+const config = require("./index");
 const mysql = require("mysql2/promise");
 
-const db_host = process.env.HOST;
-const db_database = process.env.DB_DATABASE;
-const db_user = process.env.DB_USER;
-const db_pwd = process.env.DB_PASS;
+const db_host = config.DB_HOST;
+const db_database = config.DB_DATABASE;
+const db_user = config.DB_USER;
+const db_pwd = config.DB_PASS;
 
 const pool = mysql.createPool({
   host: db_host,
