@@ -1,5 +1,8 @@
 const pool = require("../config/db");
 
+/**
+ * /api/health endpoint: Verify API and database connectivity.
+ */
 const healthCheck = async (req, res) => {
   try {
     await pool.query("SELECT 1;");
@@ -16,6 +19,7 @@ const healthCheck = async (req, res) => {
   }
 };
 
+// Exports an object
 module.exports = {
   healthCheck,
 };

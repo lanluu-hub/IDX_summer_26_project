@@ -6,6 +6,7 @@ const db_database = config.DB_DATABASE;
 const db_user = config.DB_USER;
 const db_pwd = config.DB_PASS;
 
+// Create a reusable MySQL connection pool
 const pool = mysql.createPool({
   host: db_host,
   user: db_user,
