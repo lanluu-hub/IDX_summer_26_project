@@ -1,12 +1,12 @@
 const pool = require("../config/db");
 
-const propertiesCheck = async (req, res) => {
+const properties = async (req, res) => {
   // Temporary
   try {
-    await pool.query("SELECT 1;");
+    const db_query = "SELECT * FROM rets_property LIMIT 1";
+    const [rows] = await pool.query(db_query);
     res.status(200).json({
-      status: "OK",
-      database: "Connected",
+      results: rows,
     });
   } catch (err) {
     console.error(err);
@@ -19,5 +19,5 @@ const propertiesCheck = async (req, res) => {
 
 // Exports an object
 module.exports = {
-  propertiesCheck,
+  properties,
 };

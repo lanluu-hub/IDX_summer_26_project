@@ -3,6 +3,6 @@ const router = express.Router();
 
 const propertiesController = require("../controllers/propertiesControllers");
 
-router.get("/", propertiesController.propertiesCheck);
+router.get("/", propertiesController.properties);
 
 module.exports = router;
