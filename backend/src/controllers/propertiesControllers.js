@@ -3,29 +3,45 @@ const pool = require("../config/db");
 const searchProperties = async (req, res) => {
   // Temporary
   try {
-    const limit = Number(req.query.limit) || 20;
-    const offset = Number(req.query.offset) || 0;
-    const queryStr = "SELECT * FROM rets_property ORDER BY id LIMIT ? OFFSET ?";
-    const queryParams = [];
+    let limit = parseInt(req.query.limit, 10) || 20;
+    let offset = parseInt(req.query.offset, 10) || 0;
+    const MAX_LIMIT = 100;
 
-    queryParams.push(limit);
-    queryParams.push(offset);
+    // Validate query parameters
+    if (isNaN(limit)) {
+      return res.status(400).json({
+        error: "limit must be positive integer",
+      });
+    } else if (limit < 0 || limit > MAX_LIMIT) {
+      return res.status(400).json({
+        error: "limit must be a positive integer no greater than 100",
+      });
+    }
 
-    const [rows] = await pool.query(queryStr, queryParams);
+    if (isNaN(offset) || offset < 0) {
+      return res.status(400).json({
+        error: "offset must be a positive integer",
+      });
+    }
 
-    const totalRows = await pool.query(
+    const [rows] = await pool.query(
+      "SELECT * FROM rets_property ORDER BY id ASC LIMIT ? OFFSET ?",
+      [limit, offset],
+    );
+
+    const [[totalRows]] = await pool.query(
       "SELECT COUNT(*) AS total FROM rets_property",
     );
 
-    res.status(200).json({
-      total: totalRows[0][0].total, // Index into first element of 2 array and grab the total
+    return res.status(200).json({
+      total: totalRows.total, // Index into first element of 2 array and grab the total
       limit: limit,
       offset: offset,
       results: rows,
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({
+    return res.status(500).json({
       status: "error",
       database: "Disconnected",
     });
