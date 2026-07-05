@@ -3,16 +3,20 @@ const pool = require("../config/db");
 const searchProperties = async (req, res) => {
   // Temporary
   try {
-    let limit = parseInt(req.query.limit, 10) || 20;
-    let offset = parseInt(req.query.offset, 10) || 0;
+    let limit = parseInt(req.query.limit, 10);
+    let offset = parseInt(req.query.offset, 10);
     const MAX_LIMIT = 100;
+
+    // Default if value not provide
+    if (req.query.limit === undefined) limit = 20;
+    if (req.query.offset === undefined) offset = 0;
 
     // Validate query parameters
     if (isNaN(limit)) {
       return res.status(400).json({
         error: "limit must be positive integer",
       });
-    } else if (limit < 0 || limit > MAX_LIMIT) {
+    } else if (limit <= 0 || limit > MAX_LIMIT) {
       return res.status(400).json({
         error: "limit must be a positive integer no greater than 100",
       });
