@@ -136,7 +136,46 @@ const searchProperties = async (req, res) => {
   }
 };
 
+const propertyDetail = async (req, res) => {
+  try {
+    const idParam = Number(req.params.id);
+
+    if (
+      !Number.isInteger(idParam) ||
+      idParam <= 0 ||
+      !Number.isSafeInteger(idParam)
+    ) {
+      return res.status(400).json({
+        error: "Invalid Property id, Listing ID must be a positive integer.",
+      });
+    }
+
+    const targetProperty = await findPropertyById(idParam);
+
+    if (!targetProperty) {
+      return res.status(404).json({
+        error: `property not found`,
+      });
+    }
+
+    return res.status(200).json(targetProperty);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      status: "error",
+      database: "Internal server error",
+    });
+  }
+};
+
+const findPropertyById = async (id) => {
+  const queryStr = "SELECT * FROM rets_property WHERE L_ListingID = ?";
+  const [rows] = await pool.query(queryStr, [id]);
+  return rows[0] || null;
+};
+
 // Exports an object
 module.exports = {
   searchProperties,
+  propertyDetail,
 };
