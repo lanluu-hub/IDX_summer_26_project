@@ -143,7 +143,7 @@ const getPropertyById = async (req, res) => {
       });
     }
 
-    const targetProperty = await findPropertyById(idParam);
+    const targetProperty = await findPropertyByListingId(idParam);
 
     if (!targetProperty) {
       return res.status(404).json({
