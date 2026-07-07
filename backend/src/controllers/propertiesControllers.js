@@ -1,6 +1,7 @@
+const { parse } = require("dotenv");
 const pool = require("../config/db");
 
-const searchProperties = async (req, res) => {
+const getProperties = async (req, res) => {
   try {
     let limit = parseInt(req.query.limit, 10);
     let offset = parseInt(req.query.offset, 10);
@@ -117,34 +118,26 @@ const searchProperties = async (req, res) => {
     const [[totalRows]] = await pool.query(queryCount, queryParams);
 
     // Add LIMIT and OFFSET
-    queryStr += " ORDER BY id ASC LIMIT ? OFFSET ?";
+    queryStr += " ORDER BY L_ListingID ASC LIMIT ? OFFSET ?";
     queryParams.push(limit, offset);
     const [rows] = await pool.query(queryStr, queryParams);
 
     return res.status(200).json({
       total: totalRows.total, // Index into first element of 2 array and grab the total
-      limit: limit,
-      offset: offset,
+      limit,
+      offset,
       results: rows,
     });
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({
-      status: "error",
-      database: "Internal server error",
-    });
+    return internalErr(res, err);
   }
 };
 
-const propertyDetail = async (req, res) => {
+const getPropertyById = async (req, res) => {
   try {
-    const idParam = Number(req.params.id);
+    const idParam = parseListingID(req.params.id);
 
-    if (
-      !Number.isInteger(idParam) ||
-      idParam <= 0 ||
-      !Number.isSafeInteger(idParam)
-    ) {
+    if (idParam === null) {
       return res.status(400).json({
         error: "Invalid Property id, Listing ID must be a positive integer.",
       });
@@ -158,30 +151,22 @@ const propertyDetail = async (req, res) => {
       });
     }
 
-    return res.status(200).json(targetProperty);
+    res.status(200).json(targetProperty);
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({
-      status: "error",
-      database: "Internal server error",
-    });
+    return internalErr(res, err);
   }
 };
 
-const openhousesEvent = async (req, res) => {
+const getPropertyOpenHouses = async (req, res) => {
   try {
-    const idParam = Number(req.params.id);
-    if (
-      !Number.isInteger(idParam) ||
-      idParam <= 0 ||
-      !Number.isSafeInteger(idParam)
-    ) {
+    const idParam = parseListingID(req.params.id);
+    if (idParam === null) {
       return res.status(400).json({
         error: "Invalid Property id, Listing ID must be a positive integer.",
       });
     }
 
-    const targetProperty = await findPropertyById(idParam);
+    const targetProperty = await findPropertyByListingId(idParam);
 
     if (!targetProperty) {
       return res.status(404).json({
@@ -196,15 +181,28 @@ const openhousesEvent = async (req, res) => {
 
     return res.status(200).json(events);
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({
-      status: "error",
-      database: "Internal server error",
-    });
+    return internalErr(res, err);
   }
 };
 
-const findPropertyById = async (id) => {
+// Helper Function
+const parseListingID = (value) => {
+  const id = Number(value);
+  if (!Number.isInteger(id) || id <= 0 || !Number.isSafeInteger(id)) {
+    return null;
+  }
+  return id;
+};
+
+const internalErr = (res, err) => {
+  console.error(err);
+  return res.status(500).json({
+    status: "error",
+    message: "Internal server error",
+  });
+};
+
+const findPropertyByListingId = async (id) => {
   const queryStr = "SELECT * FROM rets_property WHERE L_ListingID = ?";
   const [rows] = await pool.query(queryStr, [id]);
   return rows[0] || null;
@@ -212,7 +210,7 @@ const findPropertyById = async (id) => {
 
 // Exports an object
 module.exports = {
-  searchProperties,
-  propertyDetail,
-  openhousesEvent,
+  getProperties,
+  getPropertyById,
+  getPropertyOpenHouses,
 };
