@@ -168,6 +168,42 @@ const propertyDetail = async (req, res) => {
   }
 };
 
+const openhousesEvent = async (req, res) => {
+  try {
+    const idParam = Number(req.params.id);
+    if (
+      !Number.isInteger(idParam) ||
+      idParam <= 0 ||
+      !Number.isSafeInteger(idParam)
+    ) {
+      return res.status(400).json({
+        error: "Invalid Property id, Listing ID must be a positive integer.",
+      });
+    }
+
+    const targetProperty = await findPropertyById(idParam);
+
+    if (!targetProperty) {
+      return res.status(404).json({
+        error: `property not found`,
+      });
+    }
+
+    const queryStr =
+      "SELECT * FROM rets_openhouse WHERE L_ListingID = ? ORDER BY OpenHouseDate, OH_StartTime";
+
+    const [events] = await pool.query(queryStr, [idParam]);
+
+    return res.status(200).json(events);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      status: "error",
+      database: "Internal server error",
+    });
+  }
+};
+
 const findPropertyById = async (id) => {
   const queryStr = "SELECT * FROM rets_property WHERE L_ListingID = ?";
   const [rows] = await pool.query(queryStr, [id]);
@@ -178,4 +214,5 @@ const findPropertyById = async (id) => {
 module.exports = {
   searchProperties,
   propertyDetail,
+  openhousesEvent,
 };
