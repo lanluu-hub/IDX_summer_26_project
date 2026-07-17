@@ -23,31 +23,41 @@ function PropertyCard({ property }) {
   const image = getFirstPhoto(property.L_Photos);
 
   return (
-    <div className="property-card-container">
-      <div className="property-card">
-        <div className="property-image">
-          {image ? (
-            <img src={image} alt="Property" />
-          ) : (
-            <div className="no-image">No Image</div>
-          )}
-        </div>
+    <div className="col-lg-4 col-md-6 mb-4">
+      <div className="card h-100 shadow-sm">
+        {image ? (
+          <img
+            src={image}
+            alt="Property"
+            className="card-img-top"
+            style={{ height: "220px", objectFit: "cover" }}
+          />
+        ) : (
+          <div
+            className="d-flex justify-content-center align-items-center bg-light"
+            style={{ height: "220px" }}
+          >
+            No Image
+          </div>
+        )}
 
-        <div className="property-content">
-          <h3>${Number(property.L_SystemPrice).toLocaleString()}</h3>
+        <div className="card-body">
+          <h4 className="card-title text-success">
+            ${Number(property.L_SystemPrice).toLocaleString()}
+          </h4>
 
-          <p className="property-address">{property.L_Address}</p>
+          <p className="fw-bold mb-1">{property.L_Address}</p>
 
-          <p>
+          <p className="text-muted mb-2">
             {property.L_City}, {property.L_State}
           </p>
 
-          <p>
+          <p className="mb-2">
             <strong>Beds:</strong> {property.L_Keyword2} &nbsp;|&nbsp;
             <strong>Baths:</strong> {property.LM_Dec_3}
           </p>
 
-          <p>
+          <p className="mb-3">
             <strong>Living Area:</strong> {property.LM_Int2_3} sqft
           </p>
         </div>
@@ -55,4 +65,5 @@ function PropertyCard({ property }) {
     </div>
   );
 }
+
 export default PropertyCard;
