@@ -23,44 +23,42 @@ function PropertyCard({ property }) {
   const image = getFirstPhoto(property.L_Photos);
 
   return (
-    <div className="col-lg-4 col-md-6 mb-4">
-      <div className="card h-100 shadow-sm">
-        {image ? (
-          <img
-            src={image}
-            alt="Property"
-            className="card-img-top"
-            style={{ height: "220px", objectFit: "cover" }}
-          />
-        ) : (
-          <div
-            className="d-flex justify-content-center align-items-center bg-light"
-            style={{ height: "220px" }}
-          >
-            No Image
-          </div>
-        )}
+    <div className="card h-100 shadow-sm">
+      {image ? (
+        <img
+          src={image}
+          alt=""
+          className="card-img-top"
+          style={{ height: "220px", objectFit: "cover" }}
+        />
+      ) : (
+        <div
+          className="d-flex justify-content-center align-items-center bg-light"
+          style={{ height: "220px" }}
+        >
+          No Image
+        </div>
+      )}
 
-        <div className="card-body">
-          <h4 className="card-title text-success">
-            ${Number(property.L_SystemPrice).toLocaleString()}
-          </h4>
-
+      <div className="card-body">
+        <h3 className="card-title text-success">
+          ${Number(property.L_SystemPrice).toLocaleString()}
+        </h3>
+        <address>
           <p className="fw-bold mb-1">{property.L_Address}</p>
 
           <p className="text-muted mb-2">
             {property.L_City}, {property.L_State}
           </p>
+        </address>
+        <p className="mb-2">
+          <strong>Beds:</strong> {property.L_Keyword2} &nbsp;|&nbsp;
+          <strong>Baths:</strong> {property.LM_Dec_3}
+        </p>
 
-          <p className="mb-2">
-            <strong>Beds:</strong> {property.L_Keyword2} &nbsp;|&nbsp;
-            <strong>Baths:</strong> {property.LM_Dec_3}
-          </p>
-
-          <p className="mb-3">
-            <strong>Living Area:</strong> {property.LM_Int2_3} sqft
-          </p>
-        </div>
+        <p className="mb-3">
+          <strong>Living Area:</strong> {property.LM_Int2_3} sqft
+        </p>
       </div>
     </div>
   );
