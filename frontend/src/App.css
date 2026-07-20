@@ -1,0 +1,12 @@
+#logo {
+  width: 30%;
+  display: inline-block;
+  float: none;
+  max-height: 54%;
+  margin-bottom: 0;
+  vertical-align: middle;
+  -webkit-transition: all 0.4s ease-in-out;
+  -moz-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
+  -webkit-transform: translate3d(0, 0, 0);
+}
