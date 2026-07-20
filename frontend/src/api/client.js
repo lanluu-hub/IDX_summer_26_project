@@ -1,4 +1,4 @@
-const fetchProperties = async () => {
+const fetchProperties = async (params) => {
   const response = await fetch("/api/properties");
 
   if (!response.ok) {
@@ -9,4 +9,6 @@ const fetchProperties = async () => {
   return result;
 };
 
-export default fetchProperties;
+const fetchPropertyDetail = async (id) => {};
+
+export { fetchProperties, fetchPropertyDetail };
