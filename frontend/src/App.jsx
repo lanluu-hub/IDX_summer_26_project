@@ -5,7 +5,6 @@ function App() {
   return (
     <>
       <h1>IDX Property Search</h1>
-      <PropertyFilters />
       <ListingPage />
     </>
   );
