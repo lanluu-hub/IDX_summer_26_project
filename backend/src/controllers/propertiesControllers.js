@@ -81,7 +81,12 @@ const getProperties = async (req, res) => {
           error: "beds must be a non-negative integer",
         });
       }
-      queryWhere += " AND L_Keyword2 = ?";
+
+      if (req.query.beds === "5+") {
+        queryWhere += " AND L_Keyword2 >= ?";
+      } else {
+        queryWhere += " AND L_Keyword2 = ?";
+      }
       queryParams.push(beds);
     }
 
@@ -94,7 +99,11 @@ const getProperties = async (req, res) => {
       }
       const rounded = Number(baths.toFixed(1));
 
-      queryWhere += " AND LM_Dec_3 = ?";
+      if (req.query.baths === "5+") {
+        queryWhere += " AND LM_Dec_3 >= ?";
+      } else {
+        queryWhere += " AND LM_Dec_3 = ?";
+      }
       queryParams.push(rounded);
     }
 

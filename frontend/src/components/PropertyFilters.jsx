@@ -87,12 +87,12 @@ function PropertyFilters({ filters, onChange, onSubmit, onReset }) {
               aria-label="Floating label baths filter"
             >
               <option value="">Any</option>
-              <option value="0">0</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5+">5+</option>
+              <option value="0.0">0.0</option>
+              <option value="1.0">1.0</option>
+              <option value="2.0">2.0</option>
+              <option value="3.0">3.0</option>
+              <option value="4.0">4.0</option>
+              <option value="5.0+">5.0+</option>
             </select>
             <label htmlFor="bathFilter">Baths</label>
           </div>
