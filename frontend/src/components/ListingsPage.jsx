@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import PropertyCard from "./PropertyCard";
 import { fetchProperties } from "../api/client";
+import PropertyCard from "./PropertyCard";
+import PropertyFilters from "./PropertyFilters";
 
 /**
  * ListingPage
@@ -23,30 +24,66 @@ function ListingPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    async function loadProperties() {
-      try {
-        setLoading(true);
-        const data = await fetchProperties();
-        // DEBUG
-        console.log(data);
-        setProperties(data);
-      } catch (err) {
-        // fetchProperties() has no internal try/catch (by design, see
-        // client.js) - errors bubble up and get caught here.
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    }
+  const initialFilterState = {
+    city: "",
+    zipcode: "",
+    minPrice: "",
+    maxPrice: "",
+    beds: "",
+    baths: "",
+  };
+  const [filters, setFilters] = useState(initialFilterState);
 
-    loadProperties();
+  const handleChange = (e) => {
+    let value = e.target.value;
+    let name = e.target.name;
+
+    setFilters((prevalue) => {
+      return {
+        ...prevalue, // Spread Operator
+        [name]: value,
+      };
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    loadProperties(filters);
+  };
+
+  const handleReset = (e) => {
+    setFilters(initialFilterState);
+    loadProperties(initialFilterState);
+  };
+
+  async function loadProperties(filterParams) {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await fetchProperties(filterParams);
+      setProperties(data);
+    } catch (err) {
+      // fetchProperties() has no internal try/catch (by design, see
+      // client.js) - errors bubble up and get caught here.
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    loadProperties(filters);
     // Empty deps: fetch once on mount only.
   }, []);
 
   return (
     <section className="container py-4" role="region">
-      <h2 className="mb-4">Properties List</h2>
+      <PropertyFilters
+        filters={filters}
+        onChange={handleChange}
+        onSubmit={handleSubmit}
+        onReset={handleReset}
+      />
 
       {/* {Error Occur} */}
       {error && (
@@ -62,6 +99,13 @@ function ListingPage() {
             <span className="visually-hidden">Loading Properties...</span>
           </div>
         </div>
+      )}
+
+      {!loading && !error && (
+        <p className="text-start">
+          Showing <strong>{properties.results?.length}</strong> of{" "}
+          <strong>{properties.total}</strong> properties
+        </p>
       )}
 
       {/* Only show empty state once loading/error are ruled out, otherwise
@@ -83,11 +127,6 @@ function ListingPage() {
             </div>
           ))}
       </div>
-      {!loading && !error && (
-        <p className="text-end">
-          Showing {properties.results?.length} of {properties.total} properties
-        </p>
-      )}
     </section>
   );
 }

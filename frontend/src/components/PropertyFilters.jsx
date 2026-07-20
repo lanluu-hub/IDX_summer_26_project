@@ -1,47 +1,16 @@
 import { useState } from "react";
 
-function PropertyFilters() {
-  const initialFilterState = {
-    city: "",
-    zip: "",
-    minPrice: "",
-    maxPrice: "",
-    beds: "",
-    baths: "",
-  };
-  const [filters, setFilters] = useState(initialFilterState);
-
-  const handleChange = (e) => {
-    let value = e.target.value;
-    let name = e.target.name;
-
-    setFilters((prevalue) => {
-      return {
-        ...prevalue, // Spread Operator
-        [name]: value,
-      };
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(filters);
-  };
-
-  const handleReset = (e) => {
-    setFilters(initialFilterState);
-  };
-
+function PropertyFilters({ filters, onChange, onSubmit, onReset }) {
   return (
     <div className="container">
-      <form onSubmit={handleSubmit} className="my-4">
+      <form onSubmit={onSubmit} className="my-4">
         <div className="row g-3 p-3 border rounded shadow-sm">
           <div className="form-floating col-md-6">
             <input
               type="text"
               name="city"
               value={filters.city}
-              onChange={handleChange}
+              onChange={onChange}
               className="form-control"
               id="cityFilter"
               placeholder=" "
@@ -52,14 +21,14 @@ function PropertyFilters() {
           <div className="form-floating col-md-3">
             <input
               type="text"
-              name="zip"
-              value={filters.zip}
-              onChange={handleChange}
+              name="zipcode"
+              value={filters.zipcode}
+              onChange={onChange}
               className="form-control"
-              id="zipFilter"
+              id="zipcodeFilter"
               placeholder=" "
             />
-            <label htmlFor="zipFilter">Zipcode</label>
+            <label htmlFor="zipcodeFilter">Zipcode</label>
           </div>
 
           <div className="form-floating col-md-3">
@@ -67,7 +36,7 @@ function PropertyFilters() {
               type="number"
               name="minPrice"
               value={filters.minPrice}
-              onChange={handleChange}
+              onChange={onChange}
               className="form-control"
               id="minPriceFilter"
               placeholder=" "
@@ -80,7 +49,7 @@ function PropertyFilters() {
               type="number"
               name="maxPrice"
               value={filters.maxPrice}
-              onChange={handleChange}
+              onChange={onChange}
               className="form-control"
               id="maxPriceFilter"
               placeholder=" "
@@ -93,7 +62,7 @@ function PropertyFilters() {
               className="form-select"
               name="beds"
               value={filters.beds}
-              onChange={handleChange}
+              onChange={onChange}
               id="bedFilter"
               aria-label="Floating label beds filter"
             >
@@ -113,17 +82,17 @@ function PropertyFilters() {
               className="form-select"
               name="baths"
               value={filters.baths}
-              onChange={handleChange}
+              onChange={onChange}
               id="bathFilter"
               aria-label="Floating label baths filter"
             >
               <option value="">Any</option>
-              <option value="0">0</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5+">5+</option>
+              <option value="0.0">0.0</option>
+              <option value="1.0">1.0</option>
+              <option value="2.0">2.0</option>
+              <option value="3.0">3.0</option>
+              <option value="4.0">4.0</option>
+              <option value="5.0+">5.0+</option>
             </select>
             <label htmlFor="bathFilter">Baths</label>
           </div>
@@ -132,7 +101,7 @@ function PropertyFilters() {
               className="btn btn-secondary"
               type="button"
               value="Reset"
-              onClick={handleReset}
+              onClick={onReset}
             />
             <input className="btn btn-primary" type="submit" value="Submit" />
           </div>
