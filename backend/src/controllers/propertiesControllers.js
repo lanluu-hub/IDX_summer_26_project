@@ -206,8 +206,7 @@ const parseListingID = (value) => {
 const internalErr = (res, err) => {
   console.error(err);
   return res.status(500).json({
-    status: "error",
-    message: "Internal server error",
+    error: "Internal server error",
   });
 };
 
