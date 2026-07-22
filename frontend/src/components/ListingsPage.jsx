@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { fetchProperties } from "../api/client";
 import PropertyCard from "./PropertyCard";
 import PropertyFilters from "./PropertyFilters";
@@ -33,6 +33,7 @@ function ListingPage() {
     baths: "",
   };
   const [filters, setFilters] = useState(initialFilterState);
+  const latestRequestId = useRef(0); // prevent race condition
 
   const handleChange = (e) => {
     let value = e.target.value;
@@ -46,35 +47,45 @@ function ListingPage() {
     });
   };
 
+  async function loadProperties(filterParams = filters) {
+    const requestId = ++latestRequestId.current;
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      const data = await fetchProperties(filterParams);
+
+      if (requestId === latestRequestId.current) {
+        setProperties(data);
+      }
+    } catch (err) {
+      // fetchProperties() has no internal try/catch (by design, see
+      // client.js) - errors bubble up and get caught here.
+      if (requestId === latestRequestId.current) {
+        setError(err.message);
+      }
+    } finally {
+      if (requestId === latestRequestId.current) {
+        setLoading(false);
+      }
+    }
+  }
+
+  useEffect(() => {
+    loadProperties();
+    // Empty deps: fetch once on mount only.
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    loadProperties(filters);
+    loadProperties();
   };
 
   const handleReset = (e) => {
     setFilters(initialFilterState);
     loadProperties(initialFilterState);
   };
-
-  async function loadProperties(filterParams) {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await fetchProperties(filterParams);
-      setProperties(data);
-    } catch (err) {
-      // fetchProperties() has no internal try/catch (by design, see
-      // client.js) - errors bubble up and get caught here.
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    loadProperties(filters);
-    // Empty deps: fetch once on mount only.
-  }, []);
 
   return (
     <section className="container py-4" role="region">
