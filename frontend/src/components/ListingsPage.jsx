@@ -51,14 +51,18 @@ function ListingPage() {
     });
   };
 
-  async function loadProperties(filterParams = filters) {
+  async function loadProperties({ filterParams = filters, limit, offset }) {
     const requestId = ++latestRequestId.current;
 
     try {
       setLoading(true);
       setError(null);
 
-      const data = await fetchProperties(filterParams);
+      const data = await fetchProperties({
+        filters: filterParams,
+        limit,
+        offset,
+      });
 
       if (requestId === latestRequestId.current) {
         setProperties(data);
@@ -77,18 +81,40 @@ function ListingPage() {
   }
 
   useEffect(() => {
-    loadProperties();
+    loadProperties({
+      filterParams: filters,
+      limit: itemsPerPage,
+      offset: (currentPage - 1) * itemsPerPage,
+    });
     // Empty deps: fetch once on mount only.
   }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    loadProperties();
+    setCurrentPage(1);
+    loadProperties({ filterParams: filters, limit: itemsPerPage, offset: 0 });
   };
 
   const handleReset = (e) => {
     setFilters(initialFilterState);
-    loadProperties(initialFilterState);
+    setCurrentPage(1);
+    loadProperties({
+      filterParams: initialFilterState,
+      limit: itemsPerPage,
+      offset: 0,
+    });
+  };
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+
+    loadProperties({
+      filterParams: filters,
+      limit: itemsPerPage,
+      offset: (newPage - 1) * itemsPerPage,
+    });
+
+    window.scrollTo(0, 0);
   };
 
   return (
