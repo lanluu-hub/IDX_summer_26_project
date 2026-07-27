@@ -35,6 +35,10 @@ function ListingPage() {
   const [filters, setFilters] = useState(initialFilterState);
   const latestRequestId = useRef(0); // prevent race condition
 
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(20);
+
   const handleChange = (e) => {
     let value = e.target.value;
     let name = e.target.name;
