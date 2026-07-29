@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { fetchProperties } from "../api/client";
 import PropertyCard from "./PropertyCard";
 import PropertyFilters from "./PropertyFilters";
+import Pagination from "./Pagination";
 
 /**
  * ListingPage
@@ -89,6 +90,9 @@ function ListingPage() {
     // Empty deps: fetch once on mount only.
   }, []);
 
+  const totalPages = Math.ceil(properties.total / itemsPerPage);
+  console.log(totalPages);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setCurrentPage(1);
@@ -142,12 +146,12 @@ function ListingPage() {
         </div>
       )}
 
-      {!loading && !error && (
+      {/* {!loading && !error && (
         <p className="text-start">
           Showing <strong>{properties.results?.length}</strong> of{" "}
           <strong>{properties.total}</strong> properties
         </p>
-      )}
+      )} */}
 
       {/* Only show empty state once loading/error are ruled out, otherwise
           this briefly flashes before data arrives. */}
@@ -168,6 +172,13 @@ function ListingPage() {
             </div>
           ))}
       </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={Math.ceil(properties.total / itemsPerPage)}
+        itemsPerPage={itemsPerPage}
+        total={properties.total}
+        onPageChange={handlePageChange}
+      />
     </section>
   );
 }

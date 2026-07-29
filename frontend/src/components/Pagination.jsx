@@ -1,44 +1,84 @@
-function generatePagination(currentPage, totalPages, siblingCount = 2) {
-  pass;
-}
+import generatePagination from "../utils/pagination";
+import "./Pagination.css";
 
 const Pagination = ({
-  itemsPerPage,
-  totalItems,
-  setCurrentPage,
   currentPage,
+  totalPages,
+  itemsPerPage,
+  total,
+  onPageChange,
 }) => {
-  const pageNumbers = [];
-
-  // Fill in page numbers by dividing the total page to items per page
-  for (let i = 1; i <= Math.ceil(totalItems / itemsPerPage); i++) {
-    pageNumbers.push(i);
+  // Pagination is hidden when there is only one page
+  if (totalPages <= 1) {
+    return null;
   }
 
-  const paginate = (pageNumber, e) => {
-    e.preventDefault();
-    setCurrentPage(pageNumber);
-  };
+  // Calculate the index, for "Showing {firstIndex} - {lastIndex} of {total} properties"
+  const firstIndex = Math.max((currentPage - 1) * itemsPerPage + 1, 1);
+  const lastIndex = Math.min(currentPage * itemsPerPage, total);
+
+  const pages = generatePagination(currentPage, totalPages);
+
+  const isPreviousDisabled = currentPage === 1;
+  const isNextDisabled = currentPage === totalPages;
 
   return (
-    <nav aria-label="Page navigation">
-      <ul className="pagination">
-        {pageNumbers.map((number) => (
-          <li
-            key={number}
-            className={`page-item ${currentPage === number ? "active" : ""}`}
-          >
-            <a
-              onClick={(e) => paginate(number, e)}
-              href="!#"
+    <div className="pagination-container">
+      <span className="pagination-info">
+        Showing <strong>{firstIndex}</strong>-<strong>{lastIndex}</strong> of{" "}
+        <strong>{total}</strong> properties
+      </span>
+      <nav aria-label="Page navigation">
+        <ul className="pagination">
+          <li className={`page-item ${isPreviousDisabled ? "disabled" : ""}`}>
+            <button
+              type="button"
               className="page-link"
+              disabled={isPreviousDisabled}
+              onClick={() => onPageChange(currentPage - 1)}
             >
-              {number}
-            </a>
+              Previous
+            </button>
           </li>
-        ))}
-      </ul>
-    </nav>
+          {/* Pagination generation */}
+          {pages.map((page, index) =>
+            page === "..." ? (
+              <li className="page-item disabled" key={index}>
+                <span className="page-link" aria-hidden="true">
+                  ...
+                </span>
+              </li>
+            ) : (
+              <li
+                className={`page-item ${page === currentPage ? "active" : ""}`}
+                key={index}
+              >
+                <button
+                  className="page-link"
+                  type="button"
+                  disabled={page === currentPage}
+                  onClick={() => onPageChange(page)}
+                >
+                  {page}
+                </button>
+              </li>
+            ),
+          )}
+          <li className={`page-item ${isNextDisabled ? "disabled" : ""}`}>
+            <button
+              type="button"
+              className="page-link"
+              disabled={isNextDisabled}
+              onClick={
+                isNextDisabled ? undefined : () => onPageChange(currentPage + 1)
+              }
+            >
+              Next
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
   );
 };
 

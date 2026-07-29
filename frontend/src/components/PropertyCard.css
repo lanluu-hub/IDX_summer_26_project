@@ -14,6 +14,6 @@
   transition: transform 0.35s ease;
 }
 
-.card:hover .card-img-top {
+/* .card:hover .card-img-top {
   transform: scale(1.05);
-}
+} */
