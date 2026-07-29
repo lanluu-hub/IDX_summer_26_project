@@ -1,4 +1,4 @@
-const fetchProperties = async (filters = {}) => {
+const fetchProperties = async ({ filters, limit, offset }) => {
   const params = new URLSearchParams();
 
   Object.entries(filters).forEach(([key, value]) => {
@@ -7,8 +7,16 @@ const fetchProperties = async (filters = {}) => {
     }
   });
 
+  if (limit !== undefined) {
+    params.append("limit", limit);
+  }
+
+  if (offset !== undefined) {
+    params.append("offset", offset);
+  }
+
   const queryStr = params.toString(); // e.g. "city=Portland&beds=3"
-  const url = queryStr ? `/api/properties?${queryStr}` : `/api/properties`;
+  const url = `/api/properties?${queryStr}`;
 
   const response = await fetch(url);
   const result = await response.json();

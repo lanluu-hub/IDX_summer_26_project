@@ -12,7 +12,11 @@ test("resolves with parsed JSON data", async () => {
     json: async () => ({ total: 1, limit: 20, offset: 0, results: [] }),
   });
 
-  const data = await fetchProperties();
+  const data = await fetchProperties({
+    filters: {},
+    limit: 20,
+    offset: 0,
+  });
   expect(data).toEqual({ total: 1, limit: 20, offset: 0, results: [] });
   expect(fetch).toHaveBeenCalledOnce();
 });
@@ -23,7 +27,13 @@ test("Http Error Path", async () => {
     status: 400,
     json: async () => ({ error: ". . ." }),
   });
-  await expect(fetchProperties()).rejects.toThrow(/Status: 400/);
+  await expect(
+    fetchProperties({
+      filters: {},
+      limit: 20,
+      offset: 0,
+    }),
+  ).rejects.toThrow(/Status: 400/);
 });
 
 test("does not include empty filters in the request URL", async () => {
@@ -32,8 +42,14 @@ test("does not include empty filters in the request URL", async () => {
     status: 200,
     json: async () => ({}),
   });
-  await fetchProperties({ city: "Portland", zipcode: "" });
-  expect(global.fetch).toBeCalledWith("/api/properties?city=Portland");
+  await fetchProperties({
+    filters: { city: "Portland", zipcode: "" },
+    limit: 20,
+    offset: 0,
+  });
+  expect(global.fetch).toBeCalledWith(
+    "/api/properties?city=Portland&limit=20&offset=0",
+  );
 });
 
 test("builds correct query string from multiple filters", async () => {
@@ -44,9 +60,13 @@ test("builds correct query string from multiple filters", async () => {
   });
 
   await fetchProperties({
-    city: "Portland",
-    beds: "3",
-    minPrice: "1000000",
+    filters: {
+      city: "Portland",
+      beds: "3",
+      minPrice: "1000000",
+    },
+    limit: 20,
+    offset: 0,
   });
 
   const calledUrl = global.fetch.mock.calls[0][0];
@@ -58,5 +78,11 @@ test("builds correct query string from multiple filters", async () => {
 
 test("network error", async () => {
   global.fetch.mockRejectedValue(new Error("Network request failed"));
-  await expect(fetchProperties()).rejects.toThrow("Network request failed");
+  await expect(
+    fetchProperties({
+      filters: {},
+      limit: 20,
+      offset: 0,
+    }),
+  ).rejects.toThrow("Network request failed");
 });

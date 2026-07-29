@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { fetchProperties } from "../api/client";
 import PropertyCard from "./PropertyCard";
 import PropertyFilters from "./PropertyFilters";
+import Pagination from "./Pagination";
 
 /**
  * ListingPage
@@ -51,14 +52,18 @@ function ListingPage() {
     });
   };
 
-  async function loadProperties(filterParams = filters) {
+  async function loadProperties({ filterParams = filters, limit, offset }) {
     const requestId = ++latestRequestId.current;
 
     try {
       setLoading(true);
       setError(null);
 
-      const data = await fetchProperties(filterParams);
+      const data = await fetchProperties({
+        filters: filterParams,
+        limit,
+        offset,
+      });
 
       if (requestId === latestRequestId.current) {
         setProperties(data);
@@ -77,18 +82,43 @@ function ListingPage() {
   }
 
   useEffect(() => {
-    loadProperties();
+    loadProperties({
+      filterParams: filters,
+      limit: itemsPerPage,
+      offset: (currentPage - 1) * itemsPerPage,
+    });
     // Empty deps: fetch once on mount only.
   }, []);
 
+  const totalPages = Math.ceil(properties.total / itemsPerPage);
+  console.log(totalPages);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    loadProperties();
+    setCurrentPage(1);
+    loadProperties({ filterParams: filters, limit: itemsPerPage, offset: 0 });
   };
 
   const handleReset = (e) => {
     setFilters(initialFilterState);
-    loadProperties(initialFilterState);
+    setCurrentPage(1);
+    loadProperties({
+      filterParams: initialFilterState,
+      limit: itemsPerPage,
+      offset: 0,
+    });
+  };
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+
+    loadProperties({
+      filterParams: filters,
+      limit: itemsPerPage,
+      offset: (newPage - 1) * itemsPerPage,
+    });
+
+    window.scrollTo(0, 0);
   };
 
   return (
@@ -116,12 +146,12 @@ function ListingPage() {
         </div>
       )}
 
-      {!loading && !error && (
+      {/* {!loading && !error && (
         <p className="text-start">
           Showing <strong>{properties.results?.length}</strong> of{" "}
           <strong>{properties.total}</strong> properties
         </p>
-      )}
+      )} */}
 
       {/* Only show empty state once loading/error are ruled out, otherwise
           this briefly flashes before data arrives. */}
@@ -142,6 +172,13 @@ function ListingPage() {
             </div>
           ))}
       </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={Math.ceil(properties.total / itemsPerPage)}
+        itemsPerPage={itemsPerPage}
+        total={properties.total}
+        onPageChange={handlePageChange}
+      />
     </section>
   );
 }
