@@ -9,7 +9,7 @@ const Pagination = ({
   onPageChange,
 }) => {
   // Pagination is hidden when there is only one page
-  if (totalPages <= 1) {
+  if (totalPages === 0) {
     return null;
   }
 
@@ -28,56 +28,60 @@ const Pagination = ({
         Showing <strong>{firstIndex}</strong>-<strong>{lastIndex}</strong> of{" "}
         <strong>{total}</strong> properties
       </span>
-      <nav aria-label="Page navigation">
-        <ul className="pagination">
-          <li className={`page-item ${isPreviousDisabled ? "disabled" : ""}`}>
-            <button
-              type="button"
-              className="page-link"
-              disabled={isPreviousDisabled}
-              onClick={() => onPageChange(currentPage - 1)}
-            >
-              Previous
-            </button>
-          </li>
-          {/* Pagination generation */}
-          {pages.map((page, index) =>
-            page === "..." ? (
-              <li className="page-item disabled" key={index}>
-                <span className="page-link" aria-hidden="true">
-                  ...
-                </span>
-              </li>
-            ) : (
-              <li
-                className={`page-item ${page === currentPage ? "active" : ""}`}
-                key={index}
+      {totalPages > 1 && (
+        <nav aria-label="Page navigation">
+          <ul className="pagination">
+            <li className={`page-item ${isPreviousDisabled ? "disabled" : ""}`}>
+              <button
+                type="button"
+                className="page-link"
+                disabled={isPreviousDisabled}
+                onClick={() => onPageChange(currentPage - 1)}
               >
-                <button
-                  className="page-link"
-                  type="button"
-                  disabled={page === currentPage}
-                  onClick={() => onPageChange(page)}
+                Previous
+              </button>
+            </li>
+            {/* Pagination generation */}
+            {pages.map((page, index) =>
+              page === "..." ? (
+                <li className="page-item disabled" key={index}>
+                  <span className="page-link" aria-hidden="true">
+                    ...
+                  </span>
+                </li>
+              ) : (
+                <li
+                  className={`page-item ${page === currentPage ? "active" : ""}`}
+                  key={index}
                 >
-                  {page}
-                </button>
-              </li>
-            ),
-          )}
-          <li className={`page-item ${isNextDisabled ? "disabled" : ""}`}>
-            <button
-              type="button"
-              className="page-link"
-              disabled={isNextDisabled}
-              onClick={
-                isNextDisabled ? undefined : () => onPageChange(currentPage + 1)
-              }
-            >
-              Next
-            </button>
-          </li>
-        </ul>
-      </nav>
+                  <button
+                    className="page-link"
+                    type="button"
+                    disabled={page === currentPage}
+                    onClick={() => onPageChange(page)}
+                  >
+                    {page}
+                  </button>
+                </li>
+              ),
+            )}
+            <li className={`page-item ${isNextDisabled ? "disabled" : ""}`}>
+              <button
+                type="button"
+                className="page-link"
+                disabled={isNextDisabled}
+                onClick={
+                  isNextDisabled
+                    ? undefined
+                    : () => onPageChange(currentPage + 1)
+                }
+              >
+                Next
+              </button>
+            </li>
+          </ul>
+        </nav>
+      )}
     </div>
   );
 };
