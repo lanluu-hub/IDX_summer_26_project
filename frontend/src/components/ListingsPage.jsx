@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { fetchProperties } from "../api/client";
+import { Link } from "react-router";
 import PropertyCard from "./PropertyCard";
 import PropertyFilters from "./PropertyFilters";
 import Pagination from "./Pagination";
@@ -91,7 +92,6 @@ function ListingPage() {
   }, []);
 
   const totalPages = Math.ceil(properties.total / itemsPerPage);
-  console.log(totalPages);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -168,7 +168,12 @@ function ListingPage() {
               key={property.L_ListingID}
               className="col-sm-6 col-md-4 col-lg-3 mb-4"
             >
-              <PropertyCard property={property} />
+              <Link
+                to={`/property/${property.L_ListingID}`}
+                className="text-decoration-none text-reset"
+              >
+                <PropertyCard property={property} />
+              </Link>
             </div>
           ))}
       </div>
