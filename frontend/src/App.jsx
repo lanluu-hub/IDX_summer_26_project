@@ -1,18 +1,27 @@
 import ListingPage from "./components/ListingsPage";
+import PropertyDetailPage from "./components/PropertyDetailPage";
 import PropertyFilters from "./components/PropertyFilters";
 import logo from "./assets/logo.png";
 import "./App.css";
+import { Route, Routes } from "react-router";
 
 function App() {
   return (
-    <>
-      <h1>
-        <img src={logo} alt="IDX Exchange" id="logo" />
-      </h1>
-      <h2 className="px-3">Property Search</h2>
-      <ListingPage />
-    </>
+    <Routes>
+      <Route path="/" element={<ListingPage />} />
+      <Route path="/property/:id" element={<PropertyDetailPage />} />
+    </Routes>
   );
+
+  // return (
+  //   <>
+  //     <h1>
+  //       <img src={logo} alt="IDX Exchange" id="logo" />
+  //     </h1>
+  //     <h2 className="px-3">Property Search</h2>
+  //     <ListingPage />
+  //   </>
+  // );
 }
 
 export default App;

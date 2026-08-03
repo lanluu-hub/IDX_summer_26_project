@@ -91,7 +91,6 @@ function ListingPage() {
   }, []);
 
   const totalPages = Math.ceil(properties.total / itemsPerPage);
-  console.log(totalPages);
 
   const handleSubmit = (e) => {
     e.preventDefault();
