@@ -1,13 +1,27 @@
 import { formatPrice } from "../utils/formatPrice";
 import { formatAddress } from "../utils/formatAddress";
+import { formatTitle } from "../utils/formatTitle";
 
-const PropertyHeader = ({ price, address, city, state, zip }) => {
+const PropertyHeader = ({ property }) => {
   return (
     <div className="container">
-      <h1>{formatPrice(price)}</h1>
+      <span className="fs-4">{formatPrice(property.L_SystemPrice)}</span>
+      <h1>
+        {formatTitle(
+          property.L_Type_,
+          property.SubdivisionName,
+          property.L_City,
+          property.L_Address,
+        )}
+      </h1>
       <address className="fw-lighter fs-5">
         <i className="bi bi-geo-alt me-2"></i>
-        {formatAddress(address, city, state, zip)}
+        {formatAddress(
+          property.L_Address,
+          property.L_City,
+          property.L_State,
+          property.L_Zip,
+        )}
       </address>
       <hr />
     </div>

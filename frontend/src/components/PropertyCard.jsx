@@ -1,4 +1,5 @@
 import "./PropertyCard.css";
+import { formatPrice } from "../utils/formatPrice";
 
 function getFirstPhoto(photos) {
   try {
@@ -42,7 +43,7 @@ function PropertyCard({ property }) {
 
       <div className="card-body">
         <h3 className="card-title text-success">
-          ${Number(property.L_SystemPrice).toLocaleString()}
+          {formatPrice(property.L_SystemPrice)}
         </h3>
         <address>
           <p className="fw-bold mb-1">{property.L_Address}</p>
