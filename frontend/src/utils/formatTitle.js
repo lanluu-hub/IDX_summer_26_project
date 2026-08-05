@@ -1,29 +1,10 @@
+import { formatPropertyType } from "./formatPropertyType";
+
 export function formatTitle(typeRaw, subdivision, city, fallbackAddress) {
   const location = subdivision || city || "";
   let formattedType = "";
 
-  if (typeRaw) {
-    const specialCases = {
-      SingleFamilyResidence: "Single-Family Residence",
-      CoOwnership: "Co-Ownership",
-      ManufacturedHome: "Manufactured Home",
-      ManufacturedOnLand: "Manufactured on Land",
-      MobileHome: "Mobile Home",
-      BoatSlip: "Boat Slip",
-      MixedUse: "Mixed Use",
-      OwnYourOwn: "Own Your Own",
-      StockCooperative: "Stock Cooperative",
-    };
-
-    if (specialCases[typeRaw]) {
-      formattedType = specialCases[typeRaw];
-    } else {
-      // 2. Fallback: Split camelCase into spaced words
-      formattedType = typeRaw
-        .replace(/(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/g, " ")
-        .trim();
-    }
-  }
+  formattedType = `${formatPropertyType(typeRaw)}`;
 
   if (formattedType && location) {
     return `${formattedType} in ${titleCase(location)}`;
