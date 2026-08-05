@@ -3,11 +3,13 @@ import { useParams } from "react-router";
 import { fetchOpenHouses, fetchPropertyDetail } from "../api/client";
 import PropertyHeader from "./PropertyHeader";
 import PropertyStats from "./PropertyStats";
+import DescriptionSection from "./DescriptionSection";
+import PropertyDetailsSection from "./PropertyDetailsSection";
+import OpenHouseList from "./OpenHouseList";
 
 const PropertyDetailPage = () => {
   const { id } = useParams();
   const [propertyData, setPropertyData] = useState(null);
-  const [openhousesData, setOpenHousesData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -16,13 +18,9 @@ const PropertyDetailPage = () => {
     setError(null);
 
     try {
-      const [property, openhouses] = await Promise.all([
-        fetchPropertyDetail({ id }),
-        fetchOpenHouses({ id }),
-      ]);
+      const property = await fetchPropertyDetail({ id });
 
       setPropertyData(property);
-      setOpenHousesData(openhouses);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -35,7 +33,8 @@ const PropertyDetailPage = () => {
   }, [id]);
 
   return (
-    <main>
+    <main className="container">
+      <h1>Detail</h1>
       {/* {Error Occur} */}
       {error && (
         <div className="alert alert-danger" role="alert">
@@ -57,20 +56,32 @@ const PropertyDetailPage = () => {
       {!loading && !error && propertyData === null && (
         <p className="text-muted">No properties found.</p>
       )}
+      {!loading && !error && propertyData && (
+        <>
+          {/* PropertyImageGallery */}
+          <PropertyHeader property={propertyData} />
 
-      {/* Gallery */}
-      {!loading && !error && <PropertyHeader property={propertyData} />}
-      {/* About Property */}
-      {!loading && !error && (
-        <PropertyStats
-          beds={propertyData.L_Keyword2}
-          baths={propertyData.LM_Dec_3}
-          sqft={propertyData.LM_Int2_3}
-          yearBuilt={propertyData.YearBuilt}
-        />
+          <PropertyStats
+            beds={propertyData.L_Keyword2}
+            baths={propertyData.LM_Dec_3}
+            sqft={propertyData.LM_Int2_3}
+            yearBuilt={propertyData.YearBuilt}
+          />
+
+          <div className="row g-4">
+            <div className="col-lg-7">
+              <DescriptionSection remark={propertyData.L_Remarks} />
+              <OpenHouseList id={propertyData.L_ListingID} />
+            </div>
+
+            <div className="col-lg-5">
+              <PropertyDetailsSection property={propertyData} />
+            </div>
+          </div>
+
+          {/* Map */}
+        </>
       )}
-      {/* Map */}
-      {/* Open Houses */}
     </main>
   );
 };
