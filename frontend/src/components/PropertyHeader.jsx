@@ -4,7 +4,7 @@ import { formatTitle } from "../utils/formatTitle";
 
 const PropertyHeader = ({ property }) => {
   return (
-    <div className="container">
+    <section className="container">
       <span className="fs-4">{formatPrice(property.L_SystemPrice)}</span>
       <h1>
         {formatTitle(
@@ -24,7 +24,7 @@ const PropertyHeader = ({ property }) => {
         )}
       </address>
       <hr />
-    </div>
+    </section>
   );
 };
 

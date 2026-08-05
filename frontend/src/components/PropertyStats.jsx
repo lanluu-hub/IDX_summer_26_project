@@ -1,6 +1,6 @@
 const PropertyStats = ({ beds, baths, sqft, yearBuilt }) => {
   return (
-    <div className="container">
+    <section className="container">
       <div className="row">
         <div className="col-md-3 mb-3">
           <div className="d-flex align-items-center border rounded p-3 h-100">
@@ -45,7 +45,7 @@ const PropertyStats = ({ beds, baths, sqft, yearBuilt }) => {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
