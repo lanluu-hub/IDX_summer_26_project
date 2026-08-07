@@ -1,5 +1,6 @@
 import "./PropertyCard.css";
 import { formatPrice } from "../utils/formatPrice";
+import PlaceholderImage from "./PlaceholderImage";
 
 function getFirstPhoto(photos) {
   try {
@@ -33,12 +34,7 @@ function PropertyCard({ property }) {
           style={{ height: "220px", objectFit: "cover" }}
         />
       ) : (
-        <div
-          className="d-flex justify-content-center align-items-center bg-light"
-          style={{ height: "220px" }}
-        >
-          No Image
-        </div>
+        <PlaceholderImage height="220px" />
       )}
 
       <div className="card-body">
