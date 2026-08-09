@@ -1,25 +1,7 @@
 import "./PropertyCard.css";
 import { formatPrice } from "../utils/formatPrice";
 import PlaceholderImage from "./PlaceholderImage";
-
-function getFirstPhoto(photos) {
-  try {
-    if (photos === null || photos === undefined || photos === "") {
-      return null;
-    }
-
-    const photoSrc = JSON.parse(photos);
-
-    if (Array.isArray(photoSrc) && photoSrc.length === 0) {
-      return null;
-    }
-
-    return photoSrc[0];
-  } catch (error) {
-    console.error("Parse failed at:", error.message);
-    return null;
-  }
-}
+import { getFirstPhoto } from "../utils/photos";
 
 function PropertyCard({ property }) {
   const image = getFirstPhoto(property.L_Photos);

@@ -1,24 +1,7 @@
 import { useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import PlaceholderImage from "./PlaceholderImage";
-
-const parsePhotos = (rawPhotos) => {
-  if (Array.isArray(rawPhotos)) {
-    return rawPhotos;
-  }
-
-  if (!rawPhotos) {
-    return [];
-  }
-
-  try {
-    const parsed = JSON.parse(rawPhotos);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch (error) {
-    console.error("Failed to parse property photos:", error);
-    return [];
-  }
-};
+import { parsePhotos } from "../utils/photos";
 
 const PropertyImageGallery = ({ property }) => {
   const photos = parsePhotos(property?.L_Photos);
