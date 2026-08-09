@@ -7,12 +7,15 @@ import DescriptionSection from "./DescriptionSection";
 import PropertyDetailsSection from "./PropertyDetailsSection";
 import OpenHouseList from "./OpenHouseList";
 import PropertyImageGallery from "./PropertyImageGallery";
+import PropertyMap from "./PropertyMap";
+import React from "react";
 
 const PropertyDetailPage = () => {
   const { id } = useParams();
   const [propertyData, setPropertyData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
   async function loadPropertyDetail({ id }) {
     setLoading(true);
@@ -75,14 +78,19 @@ const PropertyDetailPage = () => {
             <div className="col-lg-7">
               <DescriptionSection remark={propertyData.L_Remarks} />
               <OpenHouseList id={propertyData.L_ListingID} />
+              <div className="shadow-sm rounded">
+                <PropertyMap
+                  apiKey={API_KEY}
+                  lat={propertyData.LMD_MP_Latitude}
+                  lng={propertyData.LMD_MP_Longitude}
+                />
+              </div>
             </div>
 
             <div className="col-lg-5">
               <PropertyDetailsSection property={propertyData} />
             </div>
           </div>
-
-          {/* Map */}
         </>
       )}
     </main>
