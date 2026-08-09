@@ -1,44 +1,25 @@
 import "./PropertyCard.css";
 import { formatPrice } from "../utils/formatPrice";
-
-function getFirstPhoto(photos) {
-  try {
-    if (photos === null || photos === undefined || photos === "") {
-      return null;
-    }
-
-    const photoSrc = JSON.parse(photos);
-
-    if (Array.isArray(photoSrc) && photoSrc.length === 0) {
-      return null;
-    }
-
-    return photoSrc[0];
-  } catch (error) {
-    console.error("Parse failed at:", error.message);
-    return null;
-  }
-}
+import PlaceholderImage from "./PlaceholderImage";
+import PropertyImageCarousel from "./PropertyImageCarousel";
+import { parsePhotos } from "../utils/photos";
 
 function PropertyCard({ property }) {
-  const image = getFirstPhoto(property.L_Photos);
+  const parsedPhotos = parsePhotos(property.L_Photos);
 
   return (
     <div className="card h-100 shadow-sm">
-      {image ? (
+      {parsedPhotos.length === 0 && <PlaceholderImage height="220px" />}
+      {parsedPhotos.length === 1 && (
         <img
-          src={image}
-          alt=""
+          src={parsedPhotos[0]}
           className="card-img-top"
           style={{ height: "220px", objectFit: "cover" }}
+          alt=""
         />
-      ) : (
-        <div
-          className="d-flex justify-content-center align-items-center bg-light"
-          style={{ height: "220px" }}
-        >
-          No Image
-        </div>
+      )}
+      {parsedPhotos.length > 1 && (
+        <PropertyImageCarousel photos={parsedPhotos} />
       )}
 
       <div className="card-body">

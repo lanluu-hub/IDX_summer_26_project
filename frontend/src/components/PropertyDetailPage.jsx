@@ -6,6 +6,7 @@ import PropertyStats from "./PropertyStats";
 import DescriptionSection from "./DescriptionSection";
 import PropertyDetailsSection from "./PropertyDetailsSection";
 import OpenHouseList from "./OpenHouseList";
+import PropertyImageGallery from "./PropertyImageGallery";
 
 const PropertyDetailPage = () => {
   const { id } = useParams();
@@ -59,6 +60,8 @@ const PropertyDetailPage = () => {
       {!loading && !error && propertyData && (
         <>
           {/* PropertyImageGallery */}
+          <PropertyImageGallery property={propertyData} />
+
           <PropertyHeader property={propertyData} />
 
           <PropertyStats
