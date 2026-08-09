@@ -1,22 +1,25 @@
 import "./PropertyCard.css";
 import { formatPrice } from "../utils/formatPrice";
 import PlaceholderImage from "./PlaceholderImage";
-import { getFirstPhoto } from "../utils/photos";
+import PropertyImageCarousel from "./PropertyImageCarousel";
+import { parsePhotos } from "../utils/photos";
 
 function PropertyCard({ property }) {
-  const image = getFirstPhoto(property.L_Photos);
+  const parsedPhotos = parsePhotos(property.L_Photos);
 
   return (
     <div className="card h-100 shadow-sm">
-      {image ? (
+      {parsedPhotos.length === 0 && <PlaceholderImage height="220px" />}
+      {parsedPhotos.length === 1 && (
         <img
-          src={image}
-          alt=""
+          src={parsedPhotos[0]}
           className="card-img-top"
           style={{ height: "220px", objectFit: "cover" }}
+          alt=""
         />
-      ) : (
-        <PlaceholderImage height="220px" />
+      )}
+      {parsedPhotos.length > 1 && (
+        <PropertyImageCarousel photos={parsedPhotos} />
       )}
 
       <div className="card-body">
