@@ -91,7 +91,6 @@ const PropertyImageGallery = ({ property }) => {
       <Modal
         show={showLightbox}
         onHide={() => setShowLightbox(false)}
-        fullscreen
         centered
         contentClassName="bg-dark border-0"
       >
