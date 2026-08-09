@@ -62,7 +62,6 @@ const PropertyDetailPage = () => {
       )}
       {!loading && !error && propertyData && (
         <>
-          {/* PropertyImageGallery */}
           <PropertyImageGallery property={propertyData} />
 
           <PropertyHeader property={propertyData} />
@@ -77,7 +76,7 @@ const PropertyDetailPage = () => {
           <div className="row g-4">
             <div className="col-lg-7">
               <DescriptionSection remark={propertyData.L_Remarks} />
-              <OpenHouseList id={propertyData.L_ListingID} />
+
               <div className="shadow-sm rounded">
                 <PropertyMap
                   apiKey={API_KEY}
@@ -85,6 +84,7 @@ const PropertyDetailPage = () => {
                   lng={propertyData.LMD_MP_Longitude}
                 />
               </div>
+              <OpenHouseList id={propertyData.L_ListingID} />
             </div>
 
             <div className="col-lg-5">

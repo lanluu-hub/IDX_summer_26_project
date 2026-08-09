@@ -4,7 +4,7 @@ const PropertyMap = ({ apiKey, lat, lng }) => {
   }
   // Combine latitude and longitude into a single string for the query parameter
   const coordinateQuery = encodeURIComponent(`${lat},${lng}`);
-  const mapUrl = `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${coordinateQuery}&zoom=17`;
+  const mapUrl = `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${coordinateQuery}&zoom=15`;
 
   return (
     <>
@@ -18,6 +18,15 @@ const PropertyMap = ({ apiKey, lat, lng }) => {
         style={{ border: 0 }}
         referrerPolicy="no-referrer-when-downgrade"
       />
+      <a
+        href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`}
+        className="btn btn-primary animate__animated my-2"
+        target="_blank"
+        rel="noopener noreferrer"
+        role="button"
+      >
+        <i class="bi bi-geo-alt-fill me-2"></i>Get Directions
+      </a>
     </>
   );
 };
