@@ -163,7 +163,6 @@ const getProperties = async (req, res) => {
     // Add LIMIT and OFFSET
     queryStr += " LIMIT ? OFFSET ?";
     queryParams.push(limit, offset);
-    console.log(queryStr, queryParams);
     const [rows] = await pool.query(queryStr, queryParams);
 
     return res.status(200).json({
