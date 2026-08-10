@@ -91,10 +91,11 @@ const PropertyImageGallery = ({ property }) => {
       <Modal
         show={showLightbox}
         onHide={() => setShowLightbox(false)}
+        fullscreen
         centered
         contentClassName="bg-dark border-0"
       >
-        <Modal.Header
+        {/* <Modal.Header
           closeButton
           closeVariant="white"
           className="bg-dark border-0"
@@ -102,7 +103,7 @@ const PropertyImageGallery = ({ property }) => {
           <Modal.Title className="text-white">
             {activeIdx + 1} / {photos.length}
           </Modal.Title>
-        </Modal.Header>
+        </Modal.Header> */}
 
         <Modal.Body className="bg-dark p-0 d-flex flex-column">
           {/* Main lightbox image */}
@@ -156,7 +157,7 @@ const PropertyImageGallery = ({ property }) => {
           </div>
 
           {/* Lightbox thumbnail strip */}
-          {photos.length > 1 && (
+          {/* {photos.length > 1 && (
             <div
               className="d-flex gap-2 overflow-auto p-3 flex-shrink-0"
               style={{ backgroundColor: "#111" }}
@@ -187,7 +188,7 @@ const PropertyImageGallery = ({ property }) => {
                 </button>
               ))}
             </div>
-          )}
+          )} */}
         </Modal.Body>
       </Modal>
     </>

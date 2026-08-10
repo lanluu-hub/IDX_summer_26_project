@@ -25,7 +25,7 @@ const PropertyMap = ({ apiKey, lat, lng }) => {
         rel="noopener noreferrer"
         role="button"
       >
-        <i class="bi bi-geo-alt-fill me-2"></i>Get Directions
+        <i className="bi bi-geo-alt-fill me-2"></i>Get Directions
       </a>
     </>
   );
