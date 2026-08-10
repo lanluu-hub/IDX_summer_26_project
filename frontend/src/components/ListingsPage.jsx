@@ -41,6 +41,10 @@ function ListingPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(20);
 
+  // Sorting
+  const [sortBy, setSortBy] = useState(null);
+  const [sortOrder, setSortOrder] = useState(null);
+
   const handleChange = (e) => {
     let value = e.target.value;
     let name = e.target.name;
@@ -53,7 +57,13 @@ function ListingPage() {
     });
   };
 
-  async function loadProperties({ filterParams = filters, limit, offset }) {
+  async function loadProperties({
+    filterParams = filters,
+    limit,
+    offset,
+    sortBy,
+    sortOrder,
+  }) {
     const requestId = ++latestRequestId.current;
 
     try {
@@ -64,6 +74,8 @@ function ListingPage() {
         filters: filterParams,
         limit,
         offset,
+        sortBy,
+        sortOrder,
       });
 
       if (requestId === latestRequestId.current) {
