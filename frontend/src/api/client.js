@@ -1,4 +1,10 @@
-const fetchProperties = async ({ filters, limit, offset }) => {
+const fetchProperties = async ({
+  filters,
+  limit,
+  offset,
+  sortBy,
+  sortOrder,
+}) => {
   const params = new URLSearchParams();
 
   Object.entries(filters).forEach(([key, value]) => {
@@ -6,6 +12,14 @@ const fetchProperties = async ({ filters, limit, offset }) => {
       params.append(key, value);
     }
   });
+
+  if (sortBy !== undefined) {
+    params.append("sortBy", sortBy);
+  }
+
+  if (sortOrder !== undefined) {
+    params.append("sortOrder", sortOrder);
+  }
 
   if (limit !== undefined) {
     params.append("limit", limit);
