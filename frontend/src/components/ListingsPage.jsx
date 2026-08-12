@@ -4,6 +4,7 @@ import { Link } from "react-router";
 import PropertyCard from "./PropertyCard";
 import PropertyFilters from "./PropertyFilters";
 import Pagination from "./Pagination";
+import SortControls from "./SortControls";
 
 /**
  * ListingPage
@@ -41,6 +42,12 @@ function ListingPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(20);
 
+  // Sorting
+  const initialSortBy = "";
+  const initialSortOrder = "";
+  const [sortBy, setSortBy] = useState(initialSortBy);
+  const [sortOrder, setSortOrder] = useState(initialSortOrder);
+
   const handleChange = (e) => {
     let value = e.target.value;
     let name = e.target.name;
@@ -53,7 +60,13 @@ function ListingPage() {
     });
   };
 
-  async function loadProperties({ filterParams = filters, limit, offset }) {
+  async function loadProperties({
+    filterParams = filters,
+    limit,
+    offset,
+    sortBy,
+    sortOrder,
+  }) {
     const requestId = ++latestRequestId.current;
 
     try {
@@ -64,6 +77,8 @@ function ListingPage() {
         filters: filterParams,
         limit,
         offset,
+        sortBy,
+        sortOrder,
       });
 
       if (requestId === latestRequestId.current) {
@@ -87,6 +102,8 @@ function ListingPage() {
       filterParams: filters,
       limit: itemsPerPage,
       offset: (currentPage - 1) * itemsPerPage,
+      sortBy,
+      sortOrder,
     });
     // Empty deps: fetch once on mount only.
   }, []);
@@ -96,16 +113,28 @@ function ListingPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setCurrentPage(1);
-    loadProperties({ filterParams: filters, limit: itemsPerPage, offset: 0 });
+    setSortBy(initialSortBy);
+    setSortOrder(initialSortOrder);
+    loadProperties({
+      filterParams: filters,
+      limit: itemsPerPage,
+      offset: 0,
+      sortBy: initialSortBy,
+      sortOrder: initialSortOrder,
+    });
   };
 
   const handleReset = (e) => {
     setFilters(initialFilterState);
     setCurrentPage(1);
+    setSortBy(initialSortBy);
+    setSortOrder(initialSortOrder);
     loadProperties({
       filterParams: initialFilterState,
       limit: itemsPerPage,
       offset: 0,
+      sortBy: initialSortBy,
+      sortOrder: initialSortOrder,
     });
   };
 
@@ -116,10 +145,27 @@ function ListingPage() {
       filterParams: filters,
       limit: itemsPerPage,
       offset: (newPage - 1) * itemsPerPage,
+      sortBy: sortBy,
+      sortOrder: sortOrder,
     });
 
     window.scrollTo(0, 0);
   };
+
+  const handleSortChange = (newSortBy, newSortOrder) => {
+    setSortBy(newSortBy);
+    setSortOrder(newSortOrder);
+    setCurrentPage(1);
+    loadProperties({
+      filterParams: filters,
+      limit: itemsPerPage,
+      offset: 0,
+      sortBy: newSortBy,
+      sortOrder: newSortOrder,
+    });
+  };
+
+  const sortValue = sortBy && sortOrder ? `${sortBy}-${sortOrder}` : "";
 
   return (
     <section className="container py-4" role="region">
@@ -159,6 +205,17 @@ function ListingPage() {
         <p className="text-muted">No properties found.</p>
       )}
 
+      {!loading && !error && properties.results.length > 0 && (
+        <div className="d-flex justify-content-end align-items-center w-100 mb-3">
+          <div className="d-flex align-items-center flex-nowrap gap-2">
+            <span className="d-block text-muted small mb-0 text-nowrap">
+              Sort by:
+            </span>
+            <SortControls value={sortValue} onChange={handleSortChange} />
+          </div>
+        </div>
+      )}
+
       {/* {render properties} */}
       <div className="row">
         {!loading &&
@@ -179,7 +236,7 @@ function ListingPage() {
       </div>
       <Pagination
         currentPage={currentPage}
-        totalPages={Math.ceil(properties.total / itemsPerPage)}
+        totalPages={totalPages}
         itemsPerPage={itemsPerPage}
         total={properties.total}
         onPageChange={handlePageChange}

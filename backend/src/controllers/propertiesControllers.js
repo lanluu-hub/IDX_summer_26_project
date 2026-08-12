@@ -11,6 +11,8 @@ const getProperties = async (req, res) => {
     const maxPrice = parseInt(req.query.maxPrice, 10);
     const beds = parseInt(req.query.beds, 10);
     const baths = parseFloat(req.query.baths);
+    const sortOrder = req.query.sortOrder?.trim();
+    const sortBy = req.query.sortBy?.trim();
     let queryStr = "SELECT * FROM rets_property";
     let queryCount = "SELECT COUNT(*) AS total FROM rets_property";
     let queryWhere = " WHERE 1 = 1";
@@ -18,6 +20,13 @@ const getProperties = async (req, res) => {
     const DEFAULT_LIMIT = 20;
     const DEFAULT_OFFSET = 0;
     const MAX_LIMIT = 100;
+    const SORT_WHITELIST = {
+      price: "L_SystemPrice",
+      dateListed: "ListingContractDate",
+      sqft: "LM_Int2_3",
+      beds: "L_Keyword2",
+    };
+    const SORT_ORDERS = new Set(["asc", "desc"]);
 
     // Default if value not provide
     if (req.query.limit === undefined) limit = DEFAULT_LIMIT;
@@ -107,6 +116,28 @@ const getProperties = async (req, res) => {
       queryParams.push(rounded);
     }
 
+    let orderByClause = " ORDER BY L_ListingID ASC";
+    let sortDirection = null;
+
+    if (sortBy !== undefined) {
+      const sortColumn = SORT_WHITELIST[sortBy];
+      if (!sortColumn) {
+        return res.status(400).json({
+          error: "sortBy must be one of: price, dateListed, sqft, beds",
+        });
+      }
+
+      if (sortOrder !== undefined && !SORT_ORDERS.has(sortOrder)) {
+        return res.status(400).json({
+          error: `sortOrder is invalid, ${sortOrder}`,
+        });
+      }
+      sortDirection = sortOrder ?? "asc";
+      sortDirection = sortDirection.toUpperCase();
+
+      orderByClause = ` ORDER BY ${sortColumn} ${sortDirection}`;
+    }
+
     // Pagination — apply defaults and validate limit/offset values
     if (isNaN(limit) || limit <= 0 || limit > MAX_LIMIT) {
       return res.status(400).json({
@@ -126,8 +157,11 @@ const getProperties = async (req, res) => {
 
     const [[totalRows]] = await pool.query(queryCount, queryParams);
 
+    // Add Sortby & orderBy
+    queryStr += orderByClause;
+
     // Add LIMIT and OFFSET
-    queryStr += " ORDER BY L_ListingID ASC LIMIT ? OFFSET ?";
+    queryStr += " LIMIT ? OFFSET ?";
     queryParams.push(limit, offset);
     const [rows] = await pool.query(queryStr, queryParams);
 

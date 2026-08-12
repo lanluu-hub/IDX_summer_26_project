@@ -77,13 +77,18 @@ const PropertyDetailPage = () => {
             <div className="col-lg-7">
               <DescriptionSection remark={propertyData.L_Remarks} />
 
-              <div className="shadow-sm rounded">
-                <PropertyMap
-                  apiKey={API_KEY}
-                  lat={propertyData.LMD_MP_Latitude}
-                  lng={propertyData.LMD_MP_Longitude}
-                />
-              </div>
+              {propertyData.LMD_MP_Latitude == 0 ||
+              propertyData.LMD_MP_Longitude == 0 ? (
+                <span className="text-muted">Map unavailable</span>
+              ) : (
+                <div className="shadow-sm rounded">
+                  <PropertyMap
+                    apiKey={API_KEY}
+                    lat={propertyData.LMD_MP_Latitude}
+                    lng={propertyData.LMD_MP_Longitude}
+                  />
+                </div>
+              )}
               <OpenHouseList id={propertyData.L_ListingID} />
             </div>
 
