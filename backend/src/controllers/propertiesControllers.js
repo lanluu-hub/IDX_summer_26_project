@@ -11,8 +11,8 @@ const getProperties = async (req, res) => {
     const maxPrice = parseInt(req.query.maxPrice, 10);
     const beds = parseInt(req.query.beds, 10);
     const baths = parseFloat(req.query.baths);
-    const sortOrder = req.query.sortOrder;
-    const sortBy = req.query.sortBy;
+    const sortOrder = req.query.sortOrder?.trim();
+    const sortBy = req.query.sortBy?.trim();
     let queryStr = "SELECT * FROM rets_property";
     let queryCount = "SELECT COUNT(*) AS total FROM rets_property";
     let queryWhere = " WHERE 1 = 1";

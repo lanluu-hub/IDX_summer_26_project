@@ -13,12 +13,12 @@ const fetchProperties = async ({
     }
   });
 
-  if (sortBy !== undefined) {
-    params.append("sortBy", sortBy);
+  if (sortBy) {
+    params.set("sortBy", sortBy);
   }
 
-  if (sortOrder !== undefined) {
-    params.append("sortOrder", sortOrder);
+  if (sortOrder) {
+    params.set("sortOrder", sortOrder);
   }
 
   if (limit !== undefined) {
