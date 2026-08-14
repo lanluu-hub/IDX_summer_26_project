@@ -1,4 +1,4 @@
-const requrestLogger = (req, res, next) => {
+const requestLogger = (req, res, next) => {
   const startTime = Date.now();
 
   // When the response finishes, calculate request time
@@ -14,4 +14,4 @@ const requrestLogger = (req, res, next) => {
   next();
 };
 
-module.exports = requrestLogger;
+module.exports = requestLogger;
