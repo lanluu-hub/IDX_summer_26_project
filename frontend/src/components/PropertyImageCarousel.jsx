@@ -66,7 +66,7 @@ const PropertyImageCarousel = ({ photos }) => {
       </button>
 
       <span
-        className="position-absolute bottom-0 end-0 m-2 badge text-bg-dark"
+        className="position-absolute bottom-0 end-0 m-2 badge text-bg-dark bg-opacity-75"
         style={{
           fontSize: "0.875rem",
           fontWeight: 600,
