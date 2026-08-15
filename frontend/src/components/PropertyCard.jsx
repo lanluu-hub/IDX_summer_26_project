@@ -8,7 +8,7 @@ function PropertyCard({ property }) {
   const parsedPhotos = parsePhotos(property.L_Photos);
 
   return (
-    <div className="card h-100 shadow-sm">
+    <div className="card h-100 shadow-sm property-card">
       {parsedPhotos.length === 0 && <PlaceholderImage height="220px" />}
       {parsedPhotos.length === 1 && (
         <img
