@@ -9,11 +9,30 @@ const PropertyImageCarousel = ({ photos }) => {
     setActiveIdx(selectedIndex);
   };
 
+  const handleCarouselControlPrev = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setActiveIdx((currentIdx) =>
+      currentIdx === 0 ? photos.length - 1 : currentIdx - 1,
+    );
+  };
+
+  const handleCarouselControlNext = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setActiveIdx((currentIdx) =>
+      currentIdx === photos.length - 1 ? 0 : currentIdx + 1,
+    );
+  };
+
   return (
     <div className="position-relative">
       <Carousel
         activeIndex={activeIdx}
         onSelect={handleSelect}
+        controls={false}
         indicators={false}
         interval={null}
       >
@@ -28,8 +47,26 @@ const PropertyImageCarousel = ({ photos }) => {
           </Carousel.Item>
         ))}
       </Carousel>
+      <button
+        type="button"
+        className="carousel-control-prev"
+        onClick={handleCarouselControlPrev}
+        aria-label="Previous image"
+      >
+        <span className="carousel-control-prev-icon" aria-hidden="true" />
+      </button>
+
+      <button
+        type="button"
+        className="carousel-control-next"
+        onClick={handleCarouselControlNext}
+        aria-label="Next image"
+      >
+        <span className="carousel-control-next-icon" aria-hidden="true" />
+      </button>
+
       <span
-        className="position-absolute bottom-0 end-0 m-2 badge text-bg-dark"
+        className="position-absolute bottom-0 end-0 m-2 badge text-bg-dark bg-opacity-75"
         style={{
           fontSize: "0.875rem",
           fontWeight: 600,
