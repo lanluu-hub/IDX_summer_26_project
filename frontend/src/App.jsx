@@ -10,16 +10,6 @@ function App() {
       <Route path="/property/:id" element={<PropertyDetailPage />} />
     </Routes>
   );
-
-  // return (
-  //   <>
-  //     <h1>
-  //       <img src={logo} alt="IDX Exchange" id="logo" />
-  //     </h1>
-  //     <h2 className="px-3">Property Search</h2>
-  //     <ListingPage />
-  //   </>
-  // );
 }
 
 export default App;
