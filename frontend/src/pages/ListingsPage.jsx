@@ -98,6 +98,7 @@ function ListingPage() {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadProperties({
       filterParams: filters,
       limit: itemsPerPage,
@@ -106,6 +107,8 @@ function ListingPage() {
       sortOrder,
     });
     // Empty deps: fetch once on mount only.
+    // Initial fetch only; handlers perform subsequent explicit requests.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const totalPages = Math.ceil(properties.total / itemsPerPage);
