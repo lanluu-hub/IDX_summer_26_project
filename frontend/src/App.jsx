@@ -1,7 +1,5 @@
-import ListingPage from "./components/ListingsPage";
-import PropertyDetailPage from "./components/PropertyDetailPage";
-import PropertyFilters from "./components/PropertyFilters";
-import logo from "./assets/logo.png";
+import ListingPage from "./pages/ListingsPage";
+import PropertyDetailPage from "./pages/PropertyDetailPage";
 import "./App.css";
 import { Route, Routes } from "react-router";
 

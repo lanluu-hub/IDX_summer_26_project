@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { fetchProperties } from "../api/client";
 import { Link } from "react-router";
-import PropertyCard from "./PropertyCard";
-import PropertyFilters from "./PropertyFilters";
-import Pagination from "./Pagination";
-import SortControls from "./SortControls";
+import PropertyCard from "../components/PropertyCard";
+import PropertyFilters from "../components/PropertyFilters";
+import Pagination from "../components/Pagination";
+import SortControls from "../components/SortControls";
 
 /**
  * ListingPage
@@ -40,7 +40,7 @@ function ListingPage() {
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(20);
+  const itemsPerPage = 20;
 
   // Sorting
   const initialSortBy = "";
@@ -98,6 +98,7 @@ function ListingPage() {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadProperties({
       filterParams: filters,
       limit: itemsPerPage,
@@ -106,6 +107,8 @@ function ListingPage() {
       sortOrder,
     });
     // Empty deps: fetch once on mount only.
+    // Initial fetch only; handlers perform subsequent explicit requests.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const totalPages = Math.ceil(properties.total / itemsPerPage);
@@ -124,7 +127,7 @@ function ListingPage() {
     });
   };
 
-  const handleReset = (e) => {
+  const handleReset = () => {
     setFilters(initialFilterState);
     setCurrentPage(1);
     setSortBy(initialSortBy);
