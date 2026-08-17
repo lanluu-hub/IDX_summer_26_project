@@ -2,11 +2,11 @@ import { expect } from "vitest";
 import { fetchProperties } from "./client";
 
 beforeEach(() => {
-  global.fetch = vi.fn();
+  globalThis.fetch = vi.fn();
 });
 
 test("resolves with parsed JSON data", async () => {
-  global.fetch.mockResolvedValue({
+  globalThis.fetch.mockResolvedValue({
     ok: true,
     status: 200,
     json: async () => ({ total: 1, limit: 20, offset: 0, results: [] }),
@@ -22,7 +22,7 @@ test("resolves with parsed JSON data", async () => {
 });
 
 test("Http Error Path", async () => {
-  global.fetch.mockResolvedValue({
+  globalThis.fetch.mockResolvedValue({
     ok: false,
     status: 400,
     json: async () => ({ error: ". . ." }),
@@ -37,7 +37,7 @@ test("Http Error Path", async () => {
 });
 
 test("does not include empty filters in the request URL", async () => {
-  global.fetch.mockResolvedValue({
+  globalThis.fetch.mockResolvedValue({
     ok: true,
     status: 200,
     json: async () => ({}),
@@ -47,13 +47,13 @@ test("does not include empty filters in the request URL", async () => {
     limit: 20,
     offset: 0,
   });
-  expect(global.fetch).toBeCalledWith(
+  expect(globalThis.fetch).toBeCalledWith(
     "/api/properties?city=Portland&limit=20&offset=0",
   );
 });
 
 test("builds correct query string from multiple filters", async () => {
-  global.fetch.mockResolvedValue({
+  globalThis.fetch.mockResolvedValue({
     ok: true,
     status: 200,
     json: async () => ({}),
@@ -69,7 +69,7 @@ test("builds correct query string from multiple filters", async () => {
     offset: 0,
   });
 
-  const calledUrl = global.fetch.mock.calls[0][0];
+  const calledUrl = globalThis.fetch.mock.calls[0][0];
 
   expect(calledUrl).toContain("city=Portland");
   expect(calledUrl).toContain("beds=3");
@@ -77,7 +77,7 @@ test("builds correct query string from multiple filters", async () => {
 });
 
 test("network error", async () => {
-  global.fetch.mockRejectedValue(new Error("Network request failed"));
+  globalThis.fetch.mockRejectedValue(new Error("Network request failed"));
   await expect(
     fetchProperties({
       filters: {},
