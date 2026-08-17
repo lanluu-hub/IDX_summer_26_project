@@ -3,6 +3,7 @@ import { formatPrice } from "../utils/formatPrice";
 import PlaceholderImage from "./PlaceholderImage";
 import PropertyImageCarousel from "./PropertyImageCarousel";
 import { parsePhotos } from "../utils/photos";
+import PropTypes from "prop-types";
 
 function PropertyCard({ property }) {
   const parsedPhotos = parsePhotos(property.L_Photos);
@@ -45,5 +46,18 @@ function PropertyCard({ property }) {
     </div>
   );
 }
+
+PropertyCard.propTypes = {
+  property: PropTypes.shape({
+    L_Photos: PropTypes.string,
+    L_SystemPrice: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    L_Address: PropTypes.string,
+    L_City: PropTypes.string,
+    L_State: PropTypes.string,
+    L_Keyword2: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    LM_Dec_3: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    LM_Int2_3: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  }).isRequired,
+};
 
 export default PropertyCard;
