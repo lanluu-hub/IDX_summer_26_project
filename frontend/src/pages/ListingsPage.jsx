@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { fetchProperties } from "../api/client";
 import { Link } from "react-router";
-import PropertyCard from "./PropertyCard";
-import PropertyFilters from "./PropertyFilters";
-import Pagination from "./Pagination";
-import SortControls from "./SortControls";
+import PropertyCard from "../components/PropertyCard";
+import PropertyFilters from "../components/PropertyFilters";
+import Pagination from "../components/Pagination";
+import SortControls from "../components/SortControls";
 
 /**
  * ListingPage

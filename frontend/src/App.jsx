@@ -1,5 +1,5 @@
-import ListingPage from "./components/ListingsPage";
-import PropertyDetailPage from "./components/PropertyDetailPage";
+import ListingPage from "./pages/ListingsPage";
+import PropertyDetailPage from "./pages/PropertyDetailPage";
 import PropertyFilters from "./components/PropertyFilters";
 import logo from "./assets/logo.png";
 import "./App.css";
