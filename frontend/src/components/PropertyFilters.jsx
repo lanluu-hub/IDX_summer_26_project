@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 function PropertyFilters({ filters, onChange, onSubmit, onReset }) {
   return (
     <div className="container">

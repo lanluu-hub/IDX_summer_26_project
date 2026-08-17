@@ -40,7 +40,7 @@ function ListingPage() {
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(20);
+  const itemsPerPage = 20;
 
   // Sorting
   const initialSortBy = "";
@@ -124,7 +124,7 @@ function ListingPage() {
     });
   };
 
-  const handleReset = (e) => {
+  const handleReset = () => {
     setFilters(initialFilterState);
     setCurrentPage(1);
     setSortBy(initialSortBy);

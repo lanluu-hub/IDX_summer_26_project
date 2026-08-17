@@ -2,9 +2,8 @@ import { formatPropertyType } from "./formatPropertyType";
 
 export function formatTitle(typeRaw, subdivision, city, fallbackAddress) {
   const location = subdivision || city || "";
-  let formattedType = "";
 
-  formattedType = `${formatPropertyType(typeRaw)}`;
+  const formattedType = `${formatPropertyType(typeRaw)}`;
 
   if (formattedType && location) {
     return `${formattedType} in ${titleCase(location)}`;

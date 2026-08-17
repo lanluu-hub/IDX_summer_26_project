@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { fetchOpenHouses, fetchPropertyDetail } from "../api/client";
+import { fetchPropertyDetail } from "../api/client";
 import PropertyHeader from "../components/PropertyHeader";
 import PropertyStats from "../components/PropertyStats";
 import DescriptionSection from "../components/DescriptionSection";
@@ -8,7 +8,6 @@ import PropertyDetailsSection from "../components/PropertyDetailsSection";
 import OpenHouseList from "../components/OpenHouseList";
 import PropertyImageGallery from "../components/PropertyImageGallery";
 import PropertyMap from "../components/PropertyMap";
-import React from "react";
 
 const PropertyDetailPage = () => {
   const { id } = useParams();
