@@ -403,4 +403,84 @@ describe("GET /api/properties/:id", () => {
   });
 });
 
-describe("GET /api/properties/:id/openhouses", () => {});
+describe("GET /api/properties/:id/openhouses", () => {
+  test("return open houses with existing parent", async () => {
+    // Arrange
+    const property = __fixture_porperty__;
+    const openhouses = __fixture_openhouse__;
+
+    pool.query
+      .mockResolvedValueOnce([[property]])
+      .mockResolvedValueOnce([openhouses]);
+
+    // Act
+    const res = await request(app).get("/api/properties/101/openhouses");
+
+    const [propertySql, propertyParams] = pool.query.mock.calls[0];
+    const [openHouseSql, openHouseParams] = pool.query.mock.calls[1];
+
+    // Assert
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual(openhouses);
+    expect(pool.query).toHaveBeenCalledTimes(2);
+    expect(propertySql).toContain("FROM rets_property");
+    expect(openHouseSql).toContain("FROM rets_openhouse");
+    expect(openHouseSql).toContain("ORDER BY OpenHouseDate, OH_StartTime");
+    expect(propertyParams).toEqual([101]);
+    expect(openHouseParams).toEqual([101]);
+  });
+
+  test("return existing parent with no open houses", async () => {
+    // Arrange
+    const property = __fixture_porperty__;
+    const openhouses = __fixture_openhouse__;
+
+    pool.query.mockResolvedValueOnce([[property]]).mockResolvedValueOnce([[]]);
+
+    // Act
+    const res = await request(app).get("/api/properties/100/openhouses");
+
+    const [propertySql, propertyParams] = pool.query.mock.calls[0];
+    const [openHouseSql, openHouseParams] = pool.query.mock.calls[1];
+
+    // Assert
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual([]);
+    expect(pool.query).toHaveBeenCalledTimes(2);
+    expect(propertySql).toContain("FROM rets_property");
+    expect(openHouseSql).toContain("FROM rets_openhouse");
+    expect(openHouseSql).toContain("ORDER BY OpenHouseDate, OH_StartTime");
+    expect(propertyParams).toEqual([100]);
+    expect(openHouseParams).toEqual([100]);
+  });
+
+  test("openhouses with missing parent", async () => {
+    // Arrange
+    const property = __fixture_porperty__;
+    const openhouses = __fixture_openhouse__;
+
+    pool.query.mockResolvedValueOnce([[]]);
+
+    // Act
+    const res = await request(app).get("/api/properties/102/openhouses");
+
+    // Assert
+    expect(res.status).toBe(404);
+    expect(res.body).toHaveProperty("error");
+    expect(pool.query).toHaveBeenCalledTimes(1);
+  });
+
+  test("openhouse with invalid id", async () => {
+    // Arrange
+    const property = __fixture_porperty__;
+    const openhouses = __fixture_openhouse__;
+
+    // Act
+    const res = await request(app).get("/api/properties/abc/openhouses");
+
+    // Assert
+    expect(res.status).toBe(400);
+    expect(res.body).toHaveProperty("error");
+    expect(pool.query).not.toHaveBeenCalled();
+  });
+});
