@@ -16,18 +16,20 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
+const __fixture__ = [
+  {
+    L_ListingID: 101,
+    L_Address: "627 SE 179th Ave",
+    L_City: "Portland",
+    L_SystemPrice: 450000,
+  },
+];
+
 describe("GET /api/properties", () => {
   describe("success", () => {
     test("return a paginated list of properties", async () => {
       // Arrange - Create small property fixture
-      const properties = [
-        {
-          L_ListingID: 101,
-          L_Address: "627 SE 179th Ave",
-          L_City: "Portland",
-          L_SystemPrice: 450000,
-        },
-      ];
+      const properties = __fixture__;
 
       // The controller makes two database calls
       // configure two results in order:
@@ -56,14 +58,7 @@ describe("GET /api/properties", () => {
   describe("test Pagination", () => {
     test("test valid pagination parameters", async () => {
       // Arrange
-      const properties = [
-        {
-          L_ListingID: 101,
-          L_Address: "627 SE 179th Ave",
-          L_City: "Portland",
-          L_SystemPrice: 450000,
-        },
-      ];
+      const properties = __fixture__;
 
       pool.query
         .mockResolvedValueOnce([[{ total: 1 }]])
@@ -89,14 +84,7 @@ describe("GET /api/properties", () => {
       ["upper boundary", 100],
     ])("accepts pagination %s", async (_description, limit) => {
       // Arrange
-      const properties = [
-        {
-          L_ListingID: 101,
-          L_Address: "627 SE 179th Ave",
-          L_City: "Portland",
-          L_SystemPrice: 450000,
-        },
-      ];
+      const properties = __fixture__;
 
       pool.query
         .mockResolvedValueOnce([[{ total: 1 }]])
@@ -133,14 +121,7 @@ describe("GET /api/properties", () => {
   describe("test filters", () => {
     test("filters properties by a valid city", async () => {
       // Arrange
-      const properties = [
-        {
-          L_ListingID: 101,
-          L_Address: "627 SE 179th Ave",
-          L_City: "Portland",
-          L_SystemPrice: 450000,
-        },
-      ];
+      const properties = __fixture__;
 
       pool.query
         .mockResolvedValueOnce([[{ total: 1 }]])
@@ -165,14 +146,7 @@ describe("GET /api/properties", () => {
 
     test("filter property by a valid zipcode", async () => {
       // Arrange
-      const properties = [
-        {
-          L_ListingID: 101,
-          L_Address: "627 SE 179th Ave",
-          L_City: "Portland",
-          L_SystemPrice: 450000,
-        },
-      ];
+      const properties = __fixture__;
 
       pool.query
         .mockResolvedValueOnce([[{ total: 1 }]])
@@ -198,14 +172,7 @@ describe("GET /api/properties", () => {
 
     test("filter property by a valid minPrice", async () => {
       // Arrange
-      const properties = [
-        {
-          L_ListingID: 101,
-          L_Address: "627 SE 179th Ave",
-          L_City: "Portland",
-          L_SystemPrice: 450000,
-        },
-      ];
+      const properties = __fixture__;
 
       pool.query
         .mockResolvedValueOnce([[{ total: 1 }]])
@@ -224,21 +191,14 @@ describe("GET /api/properties", () => {
       expect(res.body.results).toEqual(properties);
       expect(pool.query).toHaveBeenCalledTimes(2);
       expect(countSql).toContain("COUNT(*)");
-      expect(selectSql).toContain("L_SystemPrice");
-      expect(selectSql).toContain(">=");
+      expect(countSql).toContain("AND L_SystemPrice >= ?");
+      expect(selectSql).toContain("AND L_SystemPrice >= ?");
       expect(selectParams).toEqual([200000, 20, 0]);
     });
 
     test("filter property by a valid maxPrice", async () => {
       // Arrange
-      const properties = [
-        {
-          L_ListingID: 101,
-          L_Address: "627 SE 179th Ave",
-          L_City: "Portland",
-          L_SystemPrice: 450000,
-        },
-      ];
+      const properties = __fixture__;
 
       pool.query
         .mockResolvedValueOnce([[{ total: 1 }]])
@@ -257,8 +217,8 @@ describe("GET /api/properties", () => {
       expect(res.body.results).toEqual(properties);
       expect(pool.query).toHaveBeenCalledTimes(2);
       expect(countSql).toContain("COUNT(*)");
-      expect(selectSql).toContain("L_SystemPrice");
-      expect(selectSql).toContain("<=");
+      expect(countSql).toContain("AND L_SystemPrice <= ?");
+      expect(selectSql).toContain("AND L_SystemPrice <= ?");
       expect(selectParams).toEqual([500000, 20, 0]);
     });
 
@@ -267,14 +227,7 @@ describe("GET /api/properties", () => {
       ["beds (5+)", { beds: "5+" }],
     ])("filter property by a valid %s", async (_description, query) => {
       // Arrange
-      const properties = [
-        {
-          L_ListingID: 101,
-          L_Address: "627 SE 179th Ave",
-          L_City: "Portland",
-          L_SystemPrice: 450000,
-        },
-      ];
+      const properties = __fixture__;
 
       pool.query
         .mockResolvedValueOnce([[{ total: 1 }]])
@@ -291,11 +244,10 @@ describe("GET /api/properties", () => {
       expect(res.body.results).toEqual(properties);
       expect(pool.query).toHaveBeenCalledTimes(2);
       expect(countSql).toContain("COUNT(*)");
-      expect(selectSql).toContain("L_Keyword2");
       if (query.beds === "5+") {
-        expect(selectSql).toContain(">=");
+        expect(selectSql).toContain("AND L_Keyword2 >= ?");
       } else {
-        expect(selectSql).toContain("=");
+        expect(selectSql).toContain("AND L_Keyword2 = ?");
       }
       expect(selectParams).toEqual([parseInt(query.beds, 10), 20, 0]);
     });
@@ -305,14 +257,7 @@ describe("GET /api/properties", () => {
       ["baths (5.0 +)", { baths: "5.0+" }],
     ])("filter property by a valid %s", async (_description, query) => {
       // Arrange
-      const properties = [
-        {
-          L_ListingID: 101,
-          L_Address: "627 SE 179th Ave",
-          L_City: "Portland",
-          L_SystemPrice: 450000,
-        },
-      ];
+      const properties = __fixture__;
 
       pool.query
         .mockResolvedValueOnce([[{ total: 1 }]])
@@ -329,25 +274,17 @@ describe("GET /api/properties", () => {
       expect(res.body.results).toEqual(properties);
       expect(pool.query).toHaveBeenCalledTimes(2);
       expect(countSql).toContain("COUNT(*)");
-      expect(selectSql).toContain("LM_Dec_3");
       if (query.baths === "5.0+") {
-        expect(selectSql).toContain(">=");
+        expect(selectSql).toContain("AND LM_Dec_3 >= ?");
       } else {
-        expect(selectSql).toContain("=");
+        expect(selectSql).toContain("AND LM_Dec_3 = ?");
       }
       expect(selectParams).toEqual([parseFloat(query.baths), 20, 0]);
     });
 
     test("valid price range interaction", async () => {
       // Arrange
-      const properties = [
-        {
-          L_ListingID: 101,
-          L_Address: "627 SE 179th Ave",
-          L_City: "Portland",
-          L_SystemPrice: 450000,
-        },
-      ];
+      const properties = __fixture__;
 
       pool.query
         .mockResolvedValueOnce([[{ total: 1 }]])
@@ -366,9 +303,9 @@ describe("GET /api/properties", () => {
       expect(res.body.results).toEqual(properties);
       expect(pool.query).toHaveBeenCalledTimes(2);
       expect(countSql).toContain("COUNT(*)");
-      expect(selectSql).toContain("L_SystemPrice");
-      expect(selectSql).toContain(">=");
-      expect(selectSql).toContain("<=");
+      expect(selectSql).toContain(
+        "AND L_SystemPrice >= ? AND L_SystemPrice <= ?",
+      );
       expect(selectParams).toEqual([200000, 500000, 20, 0]);
     });
   });
