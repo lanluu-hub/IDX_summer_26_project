@@ -108,7 +108,7 @@ const getProperties = async (req, res) => {
       }
       const rounded = Number(baths.toFixed(1));
 
-      if (req.query.baths === "5+") {
+      if (["5+", "5.0+"].includes(req.query.baths)) {
         queryWhere += " AND LM_Dec_3 >= ?";
       } else {
         queryWhere += " AND LM_Dec_3 = ?";
