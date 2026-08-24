@@ -25,6 +25,19 @@ const __fixture__ = [
   },
 ];
 
+const __fixture_porperty__ = {
+  L_ListingID: 101,
+  L_Address: "627 SE 179th Ave",
+};
+
+const __fixture_openhouse__ = [
+  {
+    L_ListingID: 101,
+    OpenHouseDate: "2026-08-30",
+    OH_StartTime: "10:00:00",
+  },
+];
+
 describe("GET /api/properties", () => {
   describe("success", () => {
     test("return a paginated list of properties", async () => {
@@ -336,3 +349,58 @@ describe("GET /api/properties", () => {
     });
   });
 });
+
+describe("GET /api/properties/:id", () => {
+  test("returns a property for an existing ID", async () => {
+    // Arrange
+    const property = __fixture__;
+
+    pool.query.mockResolvedValueOnce([[property]]);
+
+    // Act
+    const res = await request(app).get("/api/properties/101");
+
+    const [sql, params] = pool.query.mock.calls[0];
+
+    // Assert
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual(property);
+    expect(pool.query).toHaveBeenCalledTimes(1);
+    expect(sql).toContain("WHERE L_ListingID = ?");
+    expect(params).toEqual([101]);
+  });
+
+  test("returns 404 when the property does not exist", async () => {
+    // Arrange
+    const property = __fixture__;
+
+    pool.query.mockResolvedValueOnce([[]]);
+
+    // Act
+    const res = await request(app).get("/api/properties/100");
+
+    const [sql, params] = pool.query.mock.calls[0];
+
+    // Assert
+    expect(res.status).toBe(404);
+    expect(res.body).toHaveProperty("error");
+    expect(pool.query).toHaveBeenCalledTimes(1);
+    expect(sql).toContain("WHERE L_ListingID = ?");
+    expect(params).toEqual([100]);
+  });
+
+  test("returns 400 for a nonnumeric ID", async () => {
+    // Arrange
+    const property = __fixture__;
+
+    // Act
+    const res = await request(app).get("/api/properties/abc");
+
+    // Assert
+    expect(res.status).toBe(400);
+    expect(res.body).toHaveProperty("error");
+    expect(pool.query).not.toHaveBeenCalled();
+  });
+});
+
+describe("GET /api/properties/:id/openhouses", () => {});
