@@ -17,5 +17,14 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: "./src/tests/setup.js",
+    coverage: {
+      provider: "v8",
+      include: [
+        "src/components/PropertyFilters.jsx",
+        "src/components/Pagination.jsx",
+        "src/components/PropertyCard.jsx",
+      ],
+      reporter: ["text", "html"],
+    },
   },
 });

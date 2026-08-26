@@ -5,11 +5,12 @@ import Pagination from "./Pagination";
 
 const mockOnPageChange = vi.fn();
 
+let user;
+
 beforeEach(() => {
   vi.clearAllMocks();
+  user = userEvent.setup();
 });
-
-const user = userEvent.setup();
 
 describe("Pagination Component Test", () => {
   test("renders summary text with correct numbers", () => {
@@ -27,6 +28,25 @@ describe("Pagination Component Test", () => {
     expect(
       screen.getByText((content, element) => {
         return element.textContent === "Showing 21-30 of 95 properties";
+      }),
+    );
+  });
+
+  test("renders summary text at final page", () => {
+    render(
+      <Pagination
+        currentPage={10}
+        totalPages={10}
+        itemsPerPage={10}
+        total={95}
+        onPageChange={mockOnPageChange}
+      />,
+    );
+
+    // firstIndex=21, lastIndex=30
+    expect(
+      screen.getByText((content, element) => {
+        return element.textContent === "Showing 91-95 of 95 properties";
       }),
     );
   });
@@ -82,8 +102,8 @@ describe("Pagination Component Test", () => {
       <Pagination
         currentPage={1}
         totalPages={1}
-        itemsPerPage={9}
-        total={10}
+        itemsPerPage={10}
+        total={9}
         onPageChange={mockOnPageChange}
       />,
     );
@@ -134,5 +154,43 @@ describe("Pagination Component Test", () => {
     );
 
     expect(screen.getAllByText("...")).toHaveLength(2);
+  });
+
+  test("clicking on previous render previous page", async () => {
+    render(
+      <Pagination
+        currentPage={10}
+        totalPages={24}
+        itemsPerPage={10}
+        total={240}
+        onPageChange={mockOnPageChange}
+      />,
+    );
+
+    const previousBtn = screen.getByRole("button", { name: /previous/i });
+
+    await user.click(previousBtn);
+
+    expect(mockOnPageChange).toHaveBeenCalledTimes(1);
+    expect(mockOnPageChange).toHaveBeenCalledWith(9);
+  });
+
+  test("clicking on next render next page", async () => {
+    render(
+      <Pagination
+        currentPage={10}
+        totalPages={24}
+        itemsPerPage={10}
+        total={240}
+        onPageChange={mockOnPageChange}
+      />,
+    );
+
+    const nextBtn = screen.getByRole("button", { name: /next/i });
+
+    await user.click(nextBtn);
+
+    expect(mockOnPageChange).toHaveBeenCalledTimes(1);
+    expect(mockOnPageChange).toHaveBeenCalledWith(11);
   });
 });
