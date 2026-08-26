@@ -1,5 +1,5 @@
 import { expect } from "vitest";
-import { render, screen, containter, getByText } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import PropertyCard from "./PropertyCard";
 
 const property = {
