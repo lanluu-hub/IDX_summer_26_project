@@ -11,6 +11,8 @@ const generatePagination = (currentPage, totalPages, siblingCount = 2) => {
 
   // Case 1: Show all pages if totalPages is small
   // return an array of every page number (e.g., [1, 2, 3, ..., totalPages]).
+  // Reserve space for the first/last pages, the current page's sibling
+  // window, and up to two ellipses; smaller sets can display every page.
   if (totalPages <= totalSlots) {
     return Array.from(
       { length: totalPages }, // array-like object

@@ -15,11 +15,15 @@ const getProperties = async (req, res) => {
     const sortBy = req.query.sortBy?.trim();
     let queryStr = "SELECT * FROM rets_property";
     let queryCount = "SELECT COUNT(*) AS total FROM rets_property";
+    // Seed with a tautology so every optional filter can append `AND ...`
+    // without special-casing whether it is the first condition.
     let queryWhere = " WHERE 1 = 1";
     const queryParams = [];
     const DEFAULT_LIMIT = 20;
     const DEFAULT_OFFSET = 0;
     const MAX_LIMIT = 100;
+    // SQL identifiers cannot be parameterized, so translate public sort keys
+    // through a fixed map before interpolating a column name.
     const SORT_WHITELIST = {
       price: "L_SystemPrice",
       dateListed: "ListingContractDate",
@@ -91,6 +95,8 @@ const getProperties = async (req, res) => {
         });
       }
 
+      // "5+" is the beds dropdown's upper bucket; exact values use equality,
+      // while the sentinel means five or more.
       if (req.query.beds === "5+") {
         queryWhere += " AND L_Keyword2 >= ?";
       } else {
@@ -100,12 +106,16 @@ const getProperties = async (req, res) => {
     }
 
     // Baths filter — optional, must be a non-negative number (rounded to 1 decimal place)
+    // The current UI emits "5.0+", while older callers used "5+".
+    // Treat both as the same upper bucket to preserve API compatibility.
     if (req.query.baths !== undefined) {
       if (isNaN(baths) || baths < 0) {
         return res.status(400).json({
           error: "baths must be positive number",
         });
       }
+      // Normalize client precision to the one-decimal bath values used by the
+      // UI/database so equality comparisons use the same representation.
       const rounded = Number(baths.toFixed(1));
 
       if (["5+", "5.0+"].includes(req.query.baths)) {
@@ -155,6 +165,8 @@ const getProperties = async (req, res) => {
     queryStr += queryWhere;
     queryCount += queryWhere;
 
+    // mysql2 returns [rows, metadata]; the count query has one row, so unwrap
+    // both the driver tuple and that single-row array.
     const [[totalRows]] = await pool.query(queryCount, queryParams);
 
     // Add Sortby & orderBy
