@@ -9,6 +9,8 @@ function PropertyCard({ property }) {
   const parsedPhotos = parsePhotos(property.L_Photos);
 
   return (
+    // Avoid mounting carousel state and controls for a single image; missing or
+    // malformed photo data is normalized to [] and uses the placeholder.
     <div className="card h-100 shadow-sm property-card">
       {parsedPhotos.length === 0 && <PlaceholderImage height="220px" />}
       {parsedPhotos.length === 1 && (

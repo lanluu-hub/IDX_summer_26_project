@@ -5,11 +5,15 @@ const PropertyImageCarousel = ({ photos }) => {
   const [activeIdx, setActiveIdx] = useState(0);
 
   const handleSelect = (selectedIndex, e) => {
+    // ListingPage wraps the card in a detail link, so carousel controls must
+    // cancel that navigation while the user browses photos.
     e.stopPropagation();
     setActiveIdx(selectedIndex);
   };
 
   const handleCarouselControlPrev = (e) => {
+    // ListingPage wraps the card in a detail link, so carousel controls must
+    // cancel that navigation while the user browses photos.
     e.preventDefault();
     e.stopPropagation();
 
@@ -19,6 +23,8 @@ const PropertyImageCarousel = ({ photos }) => {
   };
 
   const handleCarouselControlNext = (e) => {
+    // ListingPage wraps the card in a detail link, so carousel controls must
+    // cancel that navigation while the user browses photos.
     e.preventDefault();
     e.stopPropagation();
 
@@ -32,6 +38,8 @@ const PropertyImageCarousel = ({ photos }) => {
       <Carousel
         activeIndex={activeIdx}
         onSelect={handleSelect}
+        // Use button controls below instead of React Bootstrap's default anchors,
+        // avoiding nested links inside the card's detail link.
         controls={false}
         indicators={false}
         interval={null}

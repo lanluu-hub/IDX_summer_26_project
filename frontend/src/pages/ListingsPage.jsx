@@ -102,6 +102,7 @@ function ListingPage() {
     loadProperties({
       filterParams: filters,
       limit: itemsPerPage,
+      // The UI is one-based, while SQL OFFSET counts rows from zero.
       offset: (currentPage - 1) * itemsPerPage,
       sortBy,
       sortOrder,
@@ -194,13 +195,6 @@ function ListingPage() {
           </div>
         </div>
       )}
-
-      {/* {!loading && !error && (
-        <p className="text-start">
-          Showing <strong>{properties.results?.length}</strong> of{" "}
-          <strong>{properties.total}</strong> properties
-        </p>
-      )} */}
 
       {/* Only show empty state once loading/error are ruled out, otherwise
           this briefly flashes before data arrives. */}

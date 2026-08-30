@@ -8,7 +8,8 @@ const Pagination = ({
   total,
   onPageChange,
 }) => {
-  // Pagination is hidden when there is only one page
+  // With no result pages there is no meaningful range to summarize;
+  // one-page results still keep the summary but hide navigation below.
   if (totalPages === 0) {
     return null;
   }
