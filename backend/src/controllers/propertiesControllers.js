@@ -44,7 +44,7 @@ const getProperties = async (req, res) => {
           error: "City is empty",
         });
       }
-      queryWhere += " AND LOWER(TRIM(L_City)) = LOWER(?)";
+      queryWhere += " AND L_City = LOWER(?)";
       queryParams.push(city.trim());
     }
 
@@ -232,7 +232,7 @@ const getPropertyOpenHouses = async (req, res) => {
     const queryStr =
       "SELECT * FROM rets_openhouse WHERE L_ListingID = ? ORDER BY OpenHouseDate, OH_StartTime";
 
-    const [events] = await pool.query(queryStr, [idParam]);
+    const [events] = await pool.query(queryStr, [String(idParam)]);
 
     return res.status(200).json(events);
   } catch (err) {
@@ -258,7 +258,7 @@ const internalErr = (res, err) => {
 
 const findPropertyByListingId = async (id) => {
   const queryStr = "SELECT * FROM rets_property WHERE L_ListingID = ?";
-  const [rows] = await pool.query(queryStr, [id]);
+  const [rows] = await pool.query(queryStr, [String(id)]);
   return rows[0] || null;
 };
 
