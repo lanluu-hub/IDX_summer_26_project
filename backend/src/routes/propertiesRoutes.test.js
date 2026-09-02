@@ -367,7 +367,7 @@ describe("GET /api/properties/:id", () => {
     expect(res.body).toEqual(property);
     expect(pool.query).toHaveBeenCalledTimes(1);
     expect(sql).toContain("WHERE L_ListingID = ?");
-    expect(params).toEqual([101]);
+    expect(params).toEqual(["101"]);
   });
 
   test("returns 404 when the property does not exist", async () => {
@@ -386,7 +386,7 @@ describe("GET /api/properties/:id", () => {
     expect(res.body).toHaveProperty("error");
     expect(pool.query).toHaveBeenCalledTimes(1);
     expect(sql).toContain("WHERE L_ListingID = ?");
-    expect(params).toEqual([100]);
+    expect(params).toEqual(["100"]);
   });
 
   test("returns 400 for a nonnumeric ID", async () => {
@@ -426,8 +426,8 @@ describe("GET /api/properties/:id/openhouses", () => {
     expect(propertySql).toContain("FROM rets_property");
     expect(openHouseSql).toContain("FROM rets_openhouse");
     expect(openHouseSql).toContain("ORDER BY OpenHouseDate, OH_StartTime");
-    expect(propertyParams).toEqual([101]);
-    expect(openHouseParams).toEqual([101]);
+    expect(propertyParams).toEqual(["101"]);
+    expect(openHouseParams).toEqual(["101"]);
   });
 
   test("return existing parent with no open houses", async () => {
@@ -450,8 +450,8 @@ describe("GET /api/properties/:id/openhouses", () => {
     expect(propertySql).toContain("FROM rets_property");
     expect(openHouseSql).toContain("FROM rets_openhouse");
     expect(openHouseSql).toContain("ORDER BY OpenHouseDate, OH_StartTime");
-    expect(propertyParams).toEqual([100]);
-    expect(openHouseParams).toEqual([100]);
+    expect(propertyParams).toEqual(["100"]);
+    expect(openHouseParams).toEqual(["100"]);
   });
 
   test("openhouses with missing parent", async () => {
