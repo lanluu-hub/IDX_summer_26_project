@@ -1,0 +1,21 @@
+.property-card {
+  border: none;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.property-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 25px rgb(0 0 0 / 15%) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .property-card {
+    transition: none;
+  }
+
+  .property-card:hover {
+    transform: none;
+  }
+}
