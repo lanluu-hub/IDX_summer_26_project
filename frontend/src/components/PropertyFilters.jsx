@@ -1,6 +1,7 @@
 function PropertyFilters({ filters, onChange, onSubmit, onReset }) {
   return (
-    <div className="container">
+    <div className="search-panel">
+      <h2 className="h5 mb-3">Make yourself at home</h2>
       <form onSubmit={onSubmit} className="my-4">
         <div className="row g-3 p-3 border rounded shadow-sm">
           <div className="form-floating col-md-6">

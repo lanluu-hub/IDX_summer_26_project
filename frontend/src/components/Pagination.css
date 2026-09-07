@@ -7,8 +7,14 @@
 }
 
 .pagination-info {
-  color: #64748b;
-  font-size: 14px;
+  color: #63746d;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.pagination-info strong {
+  color: #213c39;
+  font-weight: 600;
 }
 
 .pagination .page-link {
@@ -67,7 +73,7 @@
 .page-item.disabled .page-link {
   background-color: #f8fafc;
   border-color: #e2e8f0;
-  color: #94a3b8;
+  color: #455668;
 
   cursor: not-allowed;
 }

@@ -1,19 +1,21 @@
-.card {
+.property-card {
+  border: none;
   transition:
     transform 0.25s ease,
     box-shadow 0.25s ease;
-  border: none;
 }
 
-.propertycard:hover {
+.property-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 12px 25px rgb(0 0 0 / 15%) !important;
 }
 
-.card-img-top {
-  transition: transform 0.35s ease;
-}
+@media (prefers-reduced-motion: reduce) {
+  .property-card {
+    transition: none;
+  }
 
-/* .card:hover .card-img-top {
-  transform: scale(1.05);
-} */
+  .property-card:hover {
+    transform: none;
+  }
+}

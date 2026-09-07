@@ -20,7 +20,7 @@ const PropertyMap = ({ apiKey, lat, lng }) => {
       />
       <a
         href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`}
-        className="btn btn-primary animate__animated my-2"
+        className="btn btn-primary my-2"
         target="_blank"
         rel="noopener noreferrer"
         role="button"
