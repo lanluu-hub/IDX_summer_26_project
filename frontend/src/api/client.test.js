@@ -9,6 +9,9 @@ test("resolves with parsed JSON data", async () => {
   globalThis.fetch.mockResolvedValue({
     ok: true,
     status: 200,
+    headers: {
+      get: vi.fn(() => "application/json"),
+    },
     json: async () => ({ total: 1, limit: 20, offset: 0, results: [] }),
   });
 
@@ -25,6 +28,9 @@ test("Http Error Path", async () => {
   globalThis.fetch.mockResolvedValue({
     ok: false,
     status: 400,
+    headers: {
+      get: vi.fn(() => "application/json"),
+    },
     json: async () => ({ error: ". . ." }),
   });
   await expect(
@@ -40,6 +46,9 @@ test("does not include empty filters in the request URL", async () => {
   globalThis.fetch.mockResolvedValue({
     ok: true,
     status: 200,
+    headers: {
+      get: vi.fn(() => "application/json"),
+    },
     json: async () => ({}),
   });
   await fetchProperties({
@@ -56,6 +65,9 @@ test("builds correct query string from multiple filters", async () => {
   globalThis.fetch.mockResolvedValue({
     ok: true,
     status: 200,
+    headers: {
+      get: vi.fn(() => "application/json"),
+    },
     json: async () => ({}),
   });
 
