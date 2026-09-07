@@ -33,14 +33,7 @@ const fetchProperties = async ({
   const url = queryStr ? `/api/properties?${queryStr}` : "/api/properties";
 
   const response = await fetch(url);
-  const result = await response.json();
-
-  if (!response.ok) {
-    throw new Error(
-      `HTTP error! Status: ${response.status}, Message: ${result.error}`,
-    );
-  }
-  return result;
+  return parseResponse(response);
 };
 
 const fetchPropertyDetail = async ({ id }) => {
@@ -51,14 +44,7 @@ const fetchPropertyDetail = async ({ id }) => {
   const url = `/api/properties/${id}`;
 
   const response = await fetch(url);
-  const result = await response.json();
-
-  if (!response.ok) {
-    throw new Error(
-      `HTTP error! Status: ${response.status}, Message: ${result.error}`,
-    );
-  }
-  return result;
+  return parseResponse(response);
 };
 
 const fetchOpenHouses = async ({ id }) => {
@@ -69,12 +55,28 @@ const fetchOpenHouses = async ({ id }) => {
   const url = `/api/properties/${id}/openhouses`;
 
   const response = await fetch(url);
-  const result = await response.json();
+  return parseResponse(response);
+};
 
-  if (!response.ok) {
-    throw new Error(
-      `HTTP error! Status: ${response.status}, Message: ${result.error}`,
-    );
+const parseResponse = async (res) => {
+  const contentType = res.headers.get("content-type");
+  let result = null;
+
+  if (contentType?.includes("application/json")) {
+    try {
+      result = await res.json();
+    } catch {
+      // invalid or empty json
+      result = null;
+    }
+  }
+
+  if (!res.ok) {
+    const message =
+      result?.error ||
+      "The property service is currently unavailable. Please try again.";
+
+    throw new Error(`HTTP error! Status: ${res.status}, Message: ${message}`);
   }
   return result;
 };
