@@ -48,7 +48,7 @@ const PropertyImageCarousel = ({ photos }) => {
           <Carousel.Item key={index}>
             <img
               src={photo}
-              className="d-block w-100"
+              className="d-block w-100 card-img-top"
               style={{ height: "220px", objectFit: "cover" }}
               alt=""
             />

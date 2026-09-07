@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import { fetchPropertyDetail } from "../api/client";
 import PropertyHeader from "../components/PropertyHeader";
 import PropertyStats from "../components/PropertyStats";
@@ -37,8 +37,14 @@ const PropertyDetailPage = () => {
   }, [id]);
 
   return (
-    <main className="container">
-      <h1>Detail</h1>
+    <section className="container" aria-labelledby="property-title">
+      <Link to="/" className="back-link">
+        <span aria-hidden="true">←</span> Back to properties
+      </Link>
+      <header className="page-intro page-intro-compact">
+        <p className="page-eyebrow">Take a closer look</p>
+        <h1 id="property-title">Property details</h1>
+      </header>
       {/* {Error Occur} */}
       {error && (
         <div className="alert alert-danger" role="alert">
@@ -98,7 +104,7 @@ const PropertyDetailPage = () => {
           </div>
         </>
       )}
-    </main>
+    </section>
   );
 };
 

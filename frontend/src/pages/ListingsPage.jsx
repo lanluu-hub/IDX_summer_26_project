@@ -172,7 +172,14 @@ function ListingPage() {
   const sortValue = sortBy && sortOrder ? `${sortBy}-${sortOrder}` : "";
 
   return (
-    <section className="container py-4" role="region">
+    <section className="container" aria-labelledby="listings-title">
+      <header className="page-intro">
+        <p className="page-eyebrow">Discover your next chapter</p>
+        <h1 id="listings-title">Find a place to call home.</h1>
+        <p>
+          Explore properties and narrow your search to what matters most to you.
+        </p>
+      </header>
       <PropertyFilters
         filters={filters}
         onChange={handleChange}

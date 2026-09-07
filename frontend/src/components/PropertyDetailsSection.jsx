@@ -61,7 +61,7 @@ const PropertyDetailsSection = ({ property }) => {
         {details.map((item) => (
           <li
             key={item.label}
-            className="list-group-item d-flex justify-content-between align-items-start py-3"
+            className="list-group-item d-flex justify-content-between align-items-start py-3 rounded"
           >
             <strong className="text-secondary">{item.label}</strong>
 
